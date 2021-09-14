@@ -1,10 +1,9 @@
-#include <stdlib.h>
 #include "Pilha.h"
+#include <stdlib.h>
 
 typedef struct node_st NODE;
 
-struct node_st
-{
+struct node_st {
     ITEM *item;
     NODE *anterior;
 };
@@ -18,49 +17,40 @@ static void pilha_remove_tudo(PILHA *const *pilha);
 
 static void pilha_remove_topo(PILHA *const *pilha);
 
-PILHA *pilha_criar()
-{
-    PILHA *pilha = (PILHA*) malloc(sizeof(PILHA));
-    if(pilha != NULL)
-    {
+PILHA *pilha_criar() {
+    PILHA *pilha = (PILHA *)malloc(sizeof(PILHA));
+    if (pilha != NULL) {
         pilha->topo = NULL;
         pilha->tamanho = 0;
     }
     return pilha;
 }
 
-boolean pilha_vazia(const PILHA *pilha)
-{
-    if(pilha != NULL)
-    {
+boolean pilha_vazia(const PILHA *pilha) {
+    if (pilha != NULL) {
         return pilha->tamanho == 0;
     }
     return ERRO_PILHA;
 }
 
 boolean pilha_cheia(const PILHA *pilha) {
-    if(pilha != NULL)
-    {
+    if (pilha != NULL) {
         return FALSE;
     }
     return ERRO_PILHA;
 }
 
 int pilha_tamanho(const PILHA *pilha) {
-    if(pilha != NULL)
-    {
+    if (pilha != NULL) {
         return pilha->tamanho;
     }
     return ERRO_PILHA;
 }
 
-int pilha_empilhar(PILHA *pilha, ITEM *item)
-{
-    if (pilha!=NULL)
-    {
-        NODE *novoNode = (NODE *) malloc(sizeof(NODE));
-        if(novoNode != NULL)
-        {
+int pilha_empilhar(PILHA *pilha, ITEM *item) {
+    if (pilha != NULL) {
+        NODE *novoNode = (NODE *)malloc(sizeof(NODE));
+        if (novoNode != NULL) {
             novoNode->item = item;
             novoNode->anterior = pilha->topo;
             pilha->topo = novoNode;
@@ -92,10 +82,8 @@ ITEM *pilha_desempilhar(PILHA *pilha) {
     return NULL;
 }
 
-boolean pilha_apagar(PILHA **pilha)
-{
-    if ((*pilha != NULL) && (!pilha_vazia(*pilha)))
-    {
+boolean pilha_apagar(PILHA **pilha) {
+    if ((*pilha != NULL) && (!pilha_vazia(*pilha))) {
         pilha_remove_tudo(pilha);
         free(*pilha);
         *pilha = NULL;
@@ -105,8 +93,7 @@ boolean pilha_apagar(PILHA **pilha)
 }
 
 static void pilha_remove_tudo(PILHA *const *pilha) {
-    while((*pilha)->topo != NULL)
-    {
+    while ((*pilha)->topo != NULL) {
         pilha_remove_topo(pilha);
     }
 }
