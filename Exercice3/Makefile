@@ -1,4 +1,4 @@
-UTIL=
+UTIL=cartas.c stack.c util.c
 MAIN=main.c
 BINARY=main
 
