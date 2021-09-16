@@ -51,7 +51,7 @@ char **realloc_found_games_catalog(char **found_games, int *size_search) {
     return found_games;
 }
 
-void print_found_games(const char **found_games, int number_of_searches) {
+void print_found_games(char **found_games, int number_of_searches) {
     for (int i = 0; i < number_of_searches; i++) {
         printf("%s\n", found_games[i]);
     }

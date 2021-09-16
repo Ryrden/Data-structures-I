@@ -22,7 +22,7 @@ int register_games(GAME *game,int i) {
     return 1;
 }
 
-void found_game_year(const GAME *game, char **found_games,int game_year, int number_of_register, int *search_index) {
+void search_year(const GAME *game, char **found_games,int game_year, int number_of_register, int *search_index) {
     int not_found_year = 1;
     for (int i = 0; i < number_of_register; i++) {
         if (game[i].year == game_year) {
@@ -37,7 +37,7 @@ void found_game_year(const GAME *game, char **found_games,int game_year, int num
     }
 }
 
-void found_game_producer(const GAME *game, char **found_games,char *game_producer, int number_of_register, int *search_index){
+void search_producer(const GAME *game, char **found_games,char *game_producer, int number_of_register, int *search_index){
     int not_found_producer = 1;
     for (int i = 0; i < number_of_register; i++) {
         if (!(strcmp(game[i].producer, game_producer))) {
