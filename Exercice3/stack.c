@@ -5,7 +5,8 @@
 typedef struct node_st NODE;
 
 struct node_st {
-    CARD *card;
+    void *item;
+    int requiredDataMemoryBlock;
     NODE *previous;
 };
 
@@ -31,20 +32,20 @@ STACK *create_stack() {
 }
 
 boolean stack_empty(const STACK *stack) {
-    if (stack != NULL) {
+    if (stack != NULL)
         return stack->size == 0;
-    }
+
     return ERRO_STACK;
 }
 
 int stack_size(const STACK *stack) {
-    if (stack != NULL) {
+    if (stack != NULL)
         return stack->size;
-    }
+
     return ERRO_STACK;
 }
 
-int stack_stackup(STACK *stack, CARD *card) {
+int stack_stackup(STACK *stack, void *item) {
 
     if (stack == NULL)
         return ERRO;
@@ -53,33 +54,32 @@ int stack_stackup(STACK *stack, CARD *card) {
     if (newNode == NULL)
         exit(EXIT_FAILURE);
 
-    newNode->card = card;
+    newNode->item = item;
     newNode->previous = stack->top;
     stack->top = newNode;
     stack->size++;
     return TRUE;
 }
 
-//Não Utilizado, mas poderia
-CARD *stack_top(const STACK *stack) {
-    if ((stack != NULL) && (!stack_empty(stack))) {
-        return stack->top->card;
-    }
+void *stack_top(const STACK *stack) {
+    if ((stack != NULL) && (!stack_empty(stack)))
+        return stack->top->item;
+
     return NULL;
 }
 
-CARD *stack_unstack(STACK *stack) {
+void *stack_unstack(STACK *stack) {
     if ((stack == NULL) || (stack_empty(stack)))
         return NULL;
 
     NODE *unstacked = stack->top;
-    CARD *card = stack->top->card;
+    void *item = stack->top->item;
     stack->top = stack->top->previous;
     unstacked->previous = NULL;
     free(unstacked);
     unstacked = NULL;
     stack->size--;
-    return card;
+    return item;
 }
 
 boolean stack_erase(STACK **stack) {
@@ -93,16 +93,16 @@ boolean stack_erase(STACK **stack) {
 }
 
 static void stack_remove_all(STACK *const *stack) {
-    while ((*stack)->top != NULL) {
+    while ((*stack)->top != NULL)
         stack_remove_top(stack);
-    }
 }
 
 static void stack_remove_top(STACK *const *stack) {
     NODE *temporaryNode;
     temporaryNode = (*stack)->top;
     (*stack)->top = (*stack)->top->previous;
-    card_erase(&temporaryNode->card);
+    free(temporaryNode->item);
+    temporaryNode->item = NULL;
     temporaryNode->previous = NULL;
     free(temporaryNode);
     temporaryNode = NULL;
