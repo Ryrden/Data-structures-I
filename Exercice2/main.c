@@ -24,8 +24,8 @@ int main() {
     while (register_games(game_catalog, index)) {
         number_of_register++;
         index++;
-        //Aumenta 15% do limite estabelecido
-        if (number_of_register >= size) 
+        if (number_of_register >= size)
+            //Aumenta 15% do limite estabelecido
             game_catalog = realloc_catalog(game_catalog, &size);
     }
 
@@ -43,15 +43,15 @@ int main() {
         } else if (!(strcmp(letter, "A"))) {
             int game_year;
             scanf("%d", &game_year);
-            found_game_year(game_catalog, found_games, game_year, number_of_register, &number_of_searches);
+            search_year(game_catalog, found_games, game_year, number_of_register, &number_of_searches);
         } else if (!(strcmp(letter, "E"))) {
             char game_producer[256];
             scanf(" %[^(\r|\n)]*c", game_producer);
             getchar();
-            found_game_producer(game_catalog, found_games, game_producer, number_of_register, &number_of_searches);
+            search_producer(game_catalog, found_games, game_producer, number_of_register, &number_of_searches);
         }
-        //Caso o numbero de buscas feitas encontradas estiver muito perto, aumenta 35% o limite
         if (number_of_searches >= size_search - 100)
+            //Caso o numbero de buscas feitas encontradas estiver muito perto, aumenta 35% o limite
             found_games = realloc_found_games_catalog(found_games, &size_search);
     }
 

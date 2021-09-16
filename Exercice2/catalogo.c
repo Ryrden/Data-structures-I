@@ -16,9 +16,9 @@ GAME *realloc_catalog(GAME *game, int *size) {
     *size *= 1.15; //Aumenta 15% do limite de games registrados
     game = (GAME *)realloc(game, sizeof(GAME *) * (*size));
 
-    if (game == NULL) {
+    if (game == NULL)
         exit(EXIT_FAILURE);
-    }
+    
     return game;
 }
 
@@ -37,7 +37,7 @@ char **create_found_games_catalog(int size_search) {
 }
 
 char **realloc_found_games_catalog(char **found_games, int *size_search) {
-    *size_search *= 1.25; //Aumenta 25% do limite de pesquisa
+    *size_search *= 1.35; //Aumenta 35% do limite de pesquisa
     found_games = (char **)realloc(found_games, sizeof(char *) * (*size_search));
 
     if (found_games == NULL)
@@ -51,7 +51,7 @@ char **realloc_found_games_catalog(char **found_games, int *size_search) {
     return found_games;
 }
 
-void print_found_games(char **found_games, int number_of_searches) {
+void print_found_games(const char **found_games, int number_of_searches) {
     for (int i = 0; i < number_of_searches; i++) {
         printf("%s\n", found_games[i]);
     }
