@@ -24,7 +24,7 @@ int main() {
     char symbol[5];
     while (stack_size(card_pack) != 52) {
         scanf("%s", nipe);
-        getchar(); 
+        getchar();
         scanf("%s", symbol);
         getchar();
 
@@ -36,7 +36,8 @@ int main() {
     int card_value = 0;
 
     while (!stack_empty(card_pack)) {
-        card = stack_unstack(card_pack);
+        card = (CARD *) stack_top(card_pack);
+        stack_unstack(card_pack);
         card_value = value_last_card(card);
         card_erase(&card);
         sum += card_value;
