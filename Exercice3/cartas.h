@@ -7,8 +7,8 @@
 
 typedef struct card_st CARD;
 
-CARD *create_card(int key, const char *nipe, const char *symbol);
+CARD *create_card(const char *nipe, const char *symbol);
 boolean card_erase(CARD **card);
-int sum_last_card(CARD *card) ;
+int value_last_card(CARD *card) ;
 
 #endif //CARTAS_H

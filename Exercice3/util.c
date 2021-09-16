@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "Util.h"
+#include "util.h"
 
 void boolean_print(boolean bool)
 {

@@ -14,53 +14,44 @@
     Professor: Leonardo Tórtoro Pereira
 */
 
-struct card_st {
-    int key;
-    char nipe[8];
-    char symbol[3];
-};
-
 int main() {
 
-    STACK *stack;
-    stack = create_stack();
-    int key = 1;
-    while (key <= 52) {
-        char nipe[10];
-        char symbol[5];
-        //scanf("%[^(\r|\n)]*c", nipe);
+    STACK *card_pack;
+    CARD *card;
+    card_pack = create_stack();
+
+    char nipe[10];
+    char symbol[5];
+    while (stack_size(card_pack) != 52) {
         scanf("%s", nipe);
-        getchar();
-        //scanf("%[^(\r|\n)]*c", symbol);
+        getchar(); 
         scanf("%s", symbol);
         getchar();
-        
 
-        CARD *card;
-        card = create_card(key, nipe, symbol);
-        stack_stackup(stack, card);
-        key++;
+        card = create_card(nipe, symbol);
+        stack_stackup(card_pack, card);
     }
 
     int sum = 0;
-    int hand = 3;
+    int card_value = 0;
 
-    while (key > 0) {
-        CARD *card;
-        card = stack_top(stack);
+    while (!stack_empty(card_pack)) {
+        card = stack_unstack(card_pack);
+        card_value = value_last_card(card);
+        card_erase(&card);
+        sum += card_value;
 
-        sum = sum_last_card(card);
-        hand--;
-
-        card = stack_unstack(stack);
         if (sum == 21) {
-            printf("Ganhou ;)");
+            printf("Ganhou ;)\n");
             break;
         } else if (sum > 21) {
             printf("Perdeu :(\n");
-            printf("Soma :: %d", sum);
+            printf("Soma :: %d\n", sum);
+            break;
         }
     }
+
+    stack_erase(&card_pack);
 
     return EXIT_SUCCESS;
 }

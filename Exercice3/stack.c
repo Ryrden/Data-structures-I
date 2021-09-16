@@ -14,7 +14,7 @@ struct stack_st {
     int size;
 };
 
-static void stack_remove_tudo(STACK *const *stack);
+static void stack_remove_all(STACK *const *stack);
 
 static void stack_remove_top(STACK *const *stack);
 
@@ -33,13 +33,6 @@ STACK *create_stack() {
 boolean stack_empty(const STACK *stack) {
     if (stack != NULL) {
         return stack->size == 0;
-    }
-    return ERRO_STACK;
-}
-
-boolean stack_full(const STACK *stack) {
-    if (stack != NULL) {
-        return FALSE;
     }
     return ERRO_STACK;
 }
@@ -67,6 +60,7 @@ int stack_stackup(STACK *stack, CARD *card) {
     return TRUE;
 }
 
+//Não Utilizado, mas poderia
 CARD *stack_top(const STACK *stack) {
     if ((stack != NULL) && (!stack_empty(stack))) {
         return stack->top->card;
@@ -75,7 +69,7 @@ CARD *stack_top(const STACK *stack) {
 }
 
 CARD *stack_unstack(STACK *stack) {
-    if ((stack == NULL) || (!stack_empty(stack)))
+    if ((stack == NULL) || (stack_empty(stack)))
         return NULL;
 
     NODE *unstacked = stack->top;
@@ -88,9 +82,9 @@ CARD *stack_unstack(STACK *stack) {
     return card;
 }
 
-boolean stack_apagar(STACK **stack) {
+boolean stack_erase(STACK **stack) {
     if ((*stack != NULL) && (!stack_empty(*stack))) {
-        stack_remove_tudo(stack);
+        stack_remove_all(stack);
         free(*stack);
         *stack = NULL;
         return TRUE;
@@ -98,7 +92,7 @@ boolean stack_apagar(STACK **stack) {
     return FALSE;
 }
 
-static void stack_remove_tudo(STACK *const *stack) {
+static void stack_remove_all(STACK *const *stack) {
     while ((*stack)->top != NULL) {
         stack_remove_top(stack);
     }

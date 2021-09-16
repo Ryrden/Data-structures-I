@@ -16,7 +16,7 @@ struct card_st {
     char symbol[3];
 };
 
-CARD *create_card(int key, const char *nipe, const char *symbol) {
+CARD *create_card(const char *nipe, const char *symbol) {
     CARD *card;
 
     card = (CARD *)malloc(sizeof(CARD));
@@ -24,28 +24,27 @@ CARD *create_card(int key, const char *nipe, const char *symbol) {
     if (card == NULL)
         exit(EXIT_FAILURE);
 
-    card->key = key;
     strcpy(card->nipe, nipe);
     strcpy(card->symbol, symbol);
 
     return card;
 }
 
-int sum_last_card(CARD *card) {
-    int sum = 0;
+int value_last_card(CARD *card) {
+    int value = 0;
 
-    if (!strcmp(card->symbol, "V")) {
-        sum += 11;
-    } else if (!strcmp(card->symbol, "D")) {
-        sum += 12;
-    } else if (!strcmp(card->symbol, "R")) {
-        sum += 13;
-    } else {
-        int value = atoi(card->symbol);
-        sum += value;
-    }
+    if (!strcmp(card->symbol, "V"))
+        value = 10;
+    else if (!strcmp(card->symbol, "D"))
+        value = 10;
+    else if (!strcmp(card->symbol, "R"))
+        value = 10;
+    else
+        value = atoi(card->symbol);
 
-    return sum;
+    if (value >= 1 && value <= 10)
+        return value;
+    return ERRO;
 }
 
 boolean card_erase(CARD **card) {
