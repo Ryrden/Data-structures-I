@@ -1,6 +1,6 @@
 # SCC0502 Algoritmos e Estruturas de Dados 1
 
-## Exercício 3 - 21!!!!!
+## Exercício 3 - 21!!!!
 
 ### Objetivo
 O objetivo deste exercício prático é estimular os estudantes a se familiarizarem com o comportamento e a lógica associados à estrutura de dados **pilha.**
