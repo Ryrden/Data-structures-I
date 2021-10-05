@@ -1,12 +1,13 @@
 #include "stack.h"
 #include "cartas.h"
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct node_st NODE;
 
 struct node_st {
     void *item;
-    int requiredDataMemoryBlock;
+    int *requiredDataMemoryBlock;
     NODE *previous;
 };
 
@@ -54,6 +55,7 @@ int stack_stackup(STACK *stack, void *item) {
     if (newNode == NULL)
         exit(EXIT_FAILURE);
 
+    memcpy(newNode->requiredDataMemoryBlock, item, size_t(item));
     newNode->item = item;
     newNode->previous = stack->top;
     stack->top = newNode;

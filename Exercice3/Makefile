@@ -1,6 +1,7 @@
 UTIL=cartas.c stack.c util.c
 MAIN=main.c
 BINARY=main
+NAME=Exercicio3
 
 all:
 	gcc -Wall -g $(UTIL) $(MAIN) -o $(BINARY)
@@ -16,3 +17,6 @@ valgrind:
 
 clean:
 	@rm *.o
+
+zip:
+	 @zip -r $(NAME).zip *
