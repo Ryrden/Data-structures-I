@@ -1,5 +1,6 @@
 #include "list.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct node_st NODE;
 
@@ -28,14 +29,14 @@ boolean list_empty(const LIST *list) {
     if (list != NULL) {
         return list->start == NULL;
     }
-    return ERRO;
+    return ERRO_LIST;
 }
 
 int list_size(const LIST *list) {
     if (list != NULL) {
         return list->size;
     }
-    return ERRO;
+    return ERRO_LIST;
 }
 
 int list_insert (LIST *list, void *item) {
@@ -54,21 +55,7 @@ int list_insert (LIST *list, void *item) {
             return TRUE;
         }
     }
-    return ERRO;
-}
-
-void *list_sequential_search(const LIST *list, int key) {
-    if (list != NULL) {
-        NODE *noAtual;
-        noAtual = list->start;
-        while (noAtual != NULL) {
-            if (item_get_key(noAtual->item) == key) {
-                return noAtual->item;
-            }
-            noAtual = noAtual->next;
-        }
-    }
-    return NULL;
+    return ERRO_LIST;
 }
 
 boolean list_remove_item(LIST *list, int key) {
@@ -76,7 +63,7 @@ boolean list_remove_item(LIST *list, int key) {
         NODE *noAtual;
         NODE *noAnterior = NULL;
         noAtual = list->start;
-        while (noAtual != NULL && (item_get_key(noAtual->item) != key)) {
+        while (noAtual != NULL /*&& (item_get_key(noAtual->item) != key)*/) {
             noAnterior = noAtual;
             noAtual = noAtual->next;
         }

@@ -1,4 +1,4 @@
-UTIL=
+UTIL=numbers.c list.c util.c
 MAIN=main.c
 BINARY=main
 

@@ -4,7 +4,7 @@
 #include <string.h>
 
 struct big_numbers_st {
-    
+    char number_part[5];
 };
 
 operation select_command(char *command){
@@ -19,4 +19,17 @@ operation select_command(char *command){
         return igual;
     
     return ERRO;
+}
+
+BIG_NUMBER *create_number_part(char *number_part, int tam){
+    BIG_NUMBER *number;
+
+    number = (BIG_NUMBER *)malloc(sizeof(BIG_NUMBER)*tam);
+
+    if (number_part == NULL)
+        exit(EXIT_FAILURE);
+
+    strcpy(number->number_part, number_part);
+
+    return number;
 }
