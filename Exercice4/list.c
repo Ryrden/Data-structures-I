@@ -8,7 +8,6 @@ typedef struct node_st NODE;
 struct node_st {
     BIG_NUMBER *item;
     NODE *next;
-    NODE *previous;
 };
 
 struct list {
@@ -51,7 +50,6 @@ int list_insert (LIST *list, BIG_NUMBER *item) {
                 list->start = new_node;
             } else {
                 list->end->next = new_node;
-                new_node->previous = list->end;
             }
             list->end = new_node;
             list->size++;
