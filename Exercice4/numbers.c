@@ -51,13 +51,14 @@ void print_number_part(const BIG_NUMBER *part) {
 }
 
 char *sum_two_parts(const BIG_NUMBER *part1, const BIG_NUMBER *part2, int *carry) {
-    *carry = 0;
     char sum[5];
     char *sum_answer = (char *)malloc(sizeof(char) * 5);
     int num1 = atoi(part1->number_part);
     int num2 = atoi(part2->number_part);
 
     int part_sum = num1 + num2;
+    if (*carry == 1)
+        part_sum++;
 
     if (part_sum > 9999) {
         *carry = 1;
