@@ -35,19 +35,43 @@ int main() {
         scanf("%d", &second_integer);
 
         if (select_command(command) == soma) {
-            char int_to_str[15];
+            char int1_to_str[256];
+            char int2_to_str[256];
             int partitions_num1 = 0;
             int partitions_num2 = 0;
             //converte inteiro para string
-            snprintf(int_to_str, sizeof(int_to_str), "%d", first_integer);
-            int_to_str[strlen(int_to_str)] = '\0';
 
-            add_number_to_list(int_to_str, big_number_one, &partitions_num1);
+            snprintf(int1_to_str, sizeof(int1_to_str), "%d", first_integer);
+            int1_to_str[strlen(int1_to_str)] = '\0';
 
-            snprintf(int_to_str, sizeof(int_to_str), "%d", second_integer);
-            int_to_str[strlen(int_to_str)] = '\0';
+            snprintf(int2_to_str, sizeof(int2_to_str), "%d", second_integer);
+            int2_to_str[strlen(int2_to_str)] = '\0';
 
-            add_number_to_list(int_to_str, big_number_two, &partitions_num2);
+            if (strlen(int1_to_str) != strlen(int2_to_str)) {
+                if (strlen(int1_to_str) > strlen(int2_to_str)) {
+                    int zeros_to_add = strlen(int1_to_str) - strlen(int2_to_str);
+                    for (int j = 0; j < zeros_to_add; j++) {
+                        int2_to_str[strlen(int2_to_str) + 1] = '\0';
+                        for (int k = strlen(int2_to_str) - 1; k >= 0; k--) {
+                            int2_to_str[k + 1] = int2_to_str[k];
+                            if (k == 0) 
+                                int2_to_str[k] = '0';
+                        }
+                    }
+                } else {
+                    int zeros_to_add = strlen(int2_to_str) - strlen(int1_to_str);
+                    for (int j = 0; j < zeros_to_add; j++) {
+                        int1_to_str[strlen(int1_to_str) + 1] = '\0';
+                        for (int k = strlen(int1_to_str) - 1; k >= 0; k--) {
+                            int1_to_str[k + 1] = int1_to_str[k];
+                            if (k == 0) 
+                                int1_to_str[k] = '0';
+                        }
+                    }
+                }
+            }
+            add_number_to_list(int1_to_str, big_number_one, &partitions_num1);
+            add_number_to_list(int2_to_str, big_number_two, &partitions_num2);
 
             char sum[100][5] = {};
             for (int j = partitions_num1; j > 0; j--) {
@@ -60,13 +84,12 @@ int main() {
                 } else {
                     char *index = temp_sum;
                     while (*index++ == '0')
-                    strcpy(sum[j - 1], index);
-                }   
+                        strcpy(sum[j - 1], index);
+                }
             }
             printf("\n\n Soma: ");
-            for (int k = 0; k < partitions_num1; k++) 
+            for (int k = 0; k < partitions_num1; k++)
                 printf("%s", sum[k]);
-            
 
         } else if (select_command(command) == maior) {
 
