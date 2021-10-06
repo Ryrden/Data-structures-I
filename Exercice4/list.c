@@ -1,12 +1,14 @@
 #include "list.h"
+#include "numbers.h"
 #include <stdlib.h>
 #include <stdio.h>
 
 typedef struct node_st NODE;
 
 struct node_st {
-    void *item;
+    BIG_NUMBER *item;
     NODE *next;
+    NODE *previous;
 };
 
 struct list {
@@ -39,18 +41,19 @@ int list_size(const LIST *list) {
     return ERRO_LIST;
 }
 
-int list_insert (LIST *list, void *item) {
+int list_insert (LIST *list, BIG_NUMBER *item) {
     if (list != NULL) {
-        NODE *novoNode = (NODE *)malloc(sizeof(NODE));
-        if (novoNode != NULL) {
-            novoNode->item = item;
-            novoNode->next = NULL;
+        NODE *new_node = (NODE *)malloc(sizeof(NODE));
+        if (new_node != NULL) {
+            new_node->item = item;
+            new_node->next = NULL;
             if (list_empty(list)) {
-                list->start = novoNode;
+                list->start = new_node;
             } else {
-                list->end->next = novoNode;
+                list->end->next = new_node;
+                new_node->previous = list->end;
             }
-            list->end = novoNode;
+            list->end = new_node;
             list->size++;
             return TRUE;
         }
@@ -60,26 +63,39 @@ int list_insert (LIST *list, void *item) {
 
 boolean list_remove_item(LIST *list, int key) {
     if (list != NULL) {
-        NODE *noAtual;
-        NODE *noAnterior = NULL;
-        noAtual = list->start;
-        while (noAtual != NULL /*&& (item_get_key(noAtual->item) != key)*/) {
-            noAnterior = noAtual;
-            noAtual = noAtual->next;
+        NODE *actual_node;
+        NODE *previous_node = NULL;
+        actual_node = list->start;
+        while (actual_node != NULL /*&& (item_get_key(actual_node->item) != key)*/) {
+            previous_node = actual_node;
+            actual_node = actual_node->next;
         }
-        if (noAtual != NULL) {
-            if (noAtual == list->start) {
-                list->start = noAtual->next;
-                noAtual->next = NULL;
+        if (actual_node != NULL) {
+            if (actual_node == list->start) {
+                list->start = actual_node->next;
+                actual_node->next = NULL;
             } else {
-                noAnterior->next = noAtual->next;
-                noAtual->next = NULL;
+                previous_node->next = actual_node->next;
+                actual_node->next = NULL;
             }
-            if (list->end == noAtual) {
-                list->end = noAnterior;
+            if (list->end == actual_node) {
+                list->end = previous_node;
             }
             return TRUE;
         }
     }
     return FALSE;
+}
+
+BIG_NUMBER *sequential_search(const LIST *list, int key){
+    if (list != NULL){
+        NODE *actual_node;
+        actual_node = list->start;
+        while (actual_node != NULL){
+            if (get_key(actual_node->item) == key)
+                return actual_node->item;
+            actual_node = actual_node->next;
+        }
+    }
+    return NULL;
 }
