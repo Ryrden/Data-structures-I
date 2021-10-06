@@ -4,6 +4,7 @@
 #include <string.h>
 
 struct big_numbers_st {
+    int key;
     char number_part[5];
 };
 
@@ -32,4 +33,11 @@ BIG_NUMBER *create_number_part(char *number_part, int tam){
     strcpy(number->number_part, number_part);
 
     return number;
+}
+
+void print_number(const BIG_NUMBER *part){
+    if (part != NULL){
+        printf("->chave: %d", part->key);
+        printf("->part: %s", part->number_part);
+    }
 }

@@ -16,4 +16,6 @@ operation select_command(char *command);
 
 BIG_NUMBER *create_number_part(char *number_part, int tam);
 
+void print_number(const BIG_NUMBER *part);
+
 #endif //NUMBERS_H
