@@ -87,10 +87,36 @@ int main() {
             printf("\n");
 
         } else if (select_command(command) == maior) {
+            boolean is_bigger = FALSE;
+            char *str1 = first_integer;
+            char *str2 = second_integer;
+            while (*str1 == '0') {
+                str1++;
+                strcpy(first_integer, str1);
+                str1 = first_integer;
+            }
+            while (*str2 == '0') {
+                str2++;
+                strcpy(second_integer, str2);
+                str2 = second_integer;
+            }
+
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
-            if (is_bigger(first_integer, second_integer))
+            len_digit_part = partitions_int1;
+            if (partitions_int1 > partitions_int2) {
+                is_bigger = TRUE;
+            } else {
+                for (int i = 1; i <= len_digit_part; i++) {
+                    if (is_bigger_part(sequential_search(big_number_one, i), sequential_search(big_number_two, i))) {
+                        is_bigger = TRUE;
+                        break;
+                    }
+                }
+            }
+
+            if (is_bigger)
                 printf("Resultado :: True\n");
             else
                 printf("Resultado :: False\n");

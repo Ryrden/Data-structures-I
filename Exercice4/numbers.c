@@ -50,11 +50,11 @@ void print_number_part(const BIG_NUMBER *part) {
     }
 }
 
-char *sum_two_parts(const BIG_NUMBER *part1, const BIG_NUMBER *part2, int *carry) {
+char *sum_two_parts(const BIG_NUMBER *num1_part, const BIG_NUMBER *num2_part, int *carry) {
     char sum[5];
     char *sum_answer = (char *)malloc(sizeof(char) * 5);
-    int num1 = atoi(part1->number_part);
-    int num2 = atoi(part2->number_part);
+    int num1 = atoi(num1_part->number_part);
+    int num2 = atoi(num2_part->number_part);
 
     int part_sum = num1 + num2;
 
@@ -97,61 +97,12 @@ char *sum_two_parts(const BIG_NUMBER *part1, const BIG_NUMBER *part2, int *carry
     return sum_answer;
 }
 
-int is_bigger(char *first_integer, char *second_integer) {
-    boolean is_bigger = FALSE;
-    char *str1 = first_integer;
-    char *str2 = second_integer;
+int is_bigger_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two) {
 
-    while (*str1 == '0') {
-        str1++;
-        strcpy(first_integer, str1);
-        str1 = first_integer;
-    }
-    while (*str2 == '0') {
-        str2++;
-        strcpy(second_integer, str2);
-        str2 = second_integer;
-    }
+    int num1 = atoi(big_number_one->number_part);
+    int num2 = atoi(big_number_two->number_part);
 
-    if (first_integer[0] != '-' && second_integer[0] != '-') {
-        if (strlen(first_integer) > strlen(second_integer)) {
-            is_bigger = TRUE;
-        } else if (strlen(first_integer) == strlen(second_integer)) {
-            int len = strlen(first_integer);
-            int index = 0;
-            while (len > 0) {
-                if (first_integer[index] > second_integer[index]) {
-                    is_bigger = TRUE;
-                    break;
-                }
-                len--;
-                index++;
-            }
-        }
-    } else {
-        if (first_integer[0] != '-' && second_integer[0] == '-') {
-            is_bigger = TRUE;
-        } else if (first_integer[0] == '-' && second_integer[0] == '-') {
-            str1++;
-            str2++;
-            if (strlen(str1) < strlen(str2)) {
-                is_bigger = TRUE;
-            } else if (strlen(str1) == strlen(str2)) {
-                int len = strlen(str1);
-                int index = 0;
-                while (len > 0) {
-                    if (str1[index] < str2[index]) {
-                        is_bigger = TRUE;
-                        break;
-                    }
-                    len--;
-                    index++;
-                }
-            }
-        }
-    }
-
-    return is_bigger;
+    return num1 > num2;
 }
 
 int is_smaller(char *first_integer, char *second_integer) {
