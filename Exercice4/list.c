@@ -1,7 +1,7 @@
 #include "list.h"
 #include "numbers.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct node_st NODE;
 
@@ -40,7 +40,7 @@ int list_size(const LIST *list) {
     return ERRO_LIST;
 }
 
-int list_insert (LIST *list, BIG_NUMBER *item) {
+int list_insert(LIST *list, BIG_NUMBER *item) {
     if (list != NULL) {
         NODE *new_node = (NODE *)malloc(sizeof(NODE));
         if (new_node != NULL) {
@@ -85,15 +85,34 @@ boolean list_remove_item(LIST *list, int key) {
     return FALSE;
 }
 
-BIG_NUMBER *sequential_search(const LIST *list, int key){
-    if (list != NULL){
+BIG_NUMBER *sequential_search(const LIST *list, int key) {
+    if (list != NULL) {
         NODE *actual_node;
         actual_node = list->start;
-        while (actual_node != NULL){
+        while (actual_node != NULL) {
             if (get_key(actual_node->item) == key)
                 return actual_node->item;
             actual_node = actual_node->next;
         }
     }
     return NULL;
+}
+
+boolean list_erase(LIST **list) {
+    if ((*list != NULL) && (!list_empty(*list))) {
+        while ((*list)->start != NULL) {
+            NODE *temporaryNode;
+            temporaryNode = (*list)->start;
+            (*list)->start = (*list)->start->next;
+            free(temporaryNode->item);
+            temporaryNode->item = NULL;
+            temporaryNode->next = NULL;
+            free(temporaryNode);
+            temporaryNode = NULL;
+        }
+        free(*list);
+        *list = NULL;
+        return TRUE;
+    }
+    return FALSE;
 }

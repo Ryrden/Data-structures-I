@@ -17,26 +17,25 @@ void add_number_to_list(char *int_to_str, LIST *big_number, int *partitions_num)
 
 int main() {
 
-    LIST *big_number_one;
-    LIST *big_number_two;
     int n;
     scanf("%d", &n);
     char command[6];
     char first_integer[300];
     char second_integer[300];
-
-    big_number_one = create_list();
-    big_number_two = create_list();
-
+    int len_digit_part;
     int carry = 0;
+
     for (int i = 0; i < n; i++) {
+        LIST *big_number_one = create_list();
+        LIST *big_number_two = create_list();
+
         scanf("%s", command);
         scanf("%s", first_integer);
         scanf("%s", second_integer);
+        int partitions_int1 = 0;
+        int partitions_int2 = 0;
 
         if (select_command(command) == soma) {
-            int partitions_int1 = 0;
-            int partitions_int2 = 0;
             //converte inteiro para string
 
             if (strlen(first_integer) != strlen(second_integer)) {
@@ -66,14 +65,13 @@ int main() {
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
-            int len_digit_part= partitions_int1 = partitions_int2;
+            len_digit_part = partitions_int1 = partitions_int2;
 
             char sum[100][5] = {};
             for (int j = len_digit_part; j > 0; j--) {
                 //print_number_part(sequential_search(big_number_one, j));
                 //print_number_part(sequential_search(big_number_two, j));
-                char temp_sum[5];
-                strcpy(temp_sum, sum_two_parts(sequential_search(big_number_one, j), sequential_search(big_number_two, j), &carry));
+                char *temp_sum = sum_two_parts(sequential_search(big_number_one, j), sequential_search(big_number_two, j), &carry);
                 if (j != 1) {
                     strcpy(sum[j - 1], temp_sum);
                 } else {
@@ -81,68 +79,54 @@ int main() {
                     while (*index++ == '0')
                         strcpy(sum[j - 1], index);
                 }
+                free(temp_sum);
             }
+            printf("Resultado :: ");
             for (int k = 0; k < len_digit_part; k++)
                 printf("%s", sum[k]);
+            printf("\n");
 
         } else if (select_command(command) == maior) {
-            if (strlen(first_integer) < strlen(second_integer)) {
-                printf("True");
-            } else if (strlen(first_integer) > strlen(second_integer)) {
-                printf("False");
-            } else {
-                int index = 0;
-                while (index < strlen(first_integer)) {
-                    if ((int)first_integer[index] < (int)second_integer[index]) {
-                        printf("True");
-                        break;
-                    } else if ((int)first_integer[index] > (int)second_integer[index]) {
-                        printf("False");
-                        break;
-                    }
-                    index++;
-                }
-            }
+            add_number_to_list(first_integer, big_number_one, &partitions_int1);
+            add_number_to_list(second_integer, big_number_two, &partitions_int2);
+
+            if (is_bigger(first_integer, second_integer))
+                printf("Resultado :: True\n");
+            else
+                printf("Resultado :: False\n");
+
         } else if (select_command(command) == menor) {
-            if (strlen(first_integer) < strlen(second_integer)) {
-                printf("True");
-            } else if (strlen(first_integer) > strlen(second_integer)) {
-                printf("False");
-            } else {
-                int index = 0;
-                while (index < strlen(first_integer)) {
-                    if ((int)first_integer[index] > (int)second_integer[index]) {
-                        printf("True");
-                        break;
-                    } else if ((int)first_integer[index] < (int)second_integer[index]) {
-                        printf("False");
-                        break;
-                    }
-                    index++;
-                }
-            }
+            if (is_smaller(first_integer, second_integer))
+                printf("Resultado :: True\n");
+            else
+                printf("Resultado :: False\n");
         } else if (select_command(command) == igual) {
-            if (strlen(first_integer) != strlen(second_integer)){
-                printf("False");
-            }
-            else{
-                int index = 0;
-                while (index < strlen(first_integer)) {
-                    if ((int)first_integer[index] > (int)second_integer[index]) {
-                        printf("True");
-                        break;
-                    } else if ((int)first_integer[index] < (int)second_integer[index]) {
-                        printf("False");
+            boolean is_equal = TRUE;
+            char *str1 = first_integer;
+            char *str2 = second_integer;
+            if (strlen(first_integer) == strlen(second_integer)) {
+                int len = strlen(first_integer);
+                while (len > 0) {
+                    if (*str1++ != *str2++) {
+                        is_equal = FALSE;
                         break;
                     }
-                    index++;
+                    len--;
                 }
+            } else {
+                is_equal = FALSE;
             }
+
+            if (is_equal)
+                printf("Resultado :: True\n");
+            else
+                printf("Resultado :: False\n");
         } else {
             return EXIT_FAILURE;
         }
+        list_erase(&big_number_one);
+        list_erase(&big_number_two);
     }
-
     return EXIT_SUCCESS;
 }
 
