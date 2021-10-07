@@ -8,6 +8,7 @@ typedef struct node_st NODE;
 struct node_st {
     BIG_NUMBER *item;
     NODE *next;
+    NODE *previous;
 };
 
 struct list {
@@ -49,6 +50,7 @@ int list_insert(LIST *list, BIG_NUMBER *item) {
             if (list_empty(list)) {
                 list->start = new_node;
             } else {
+                new_node->previous = list->end;
                 list->end->next = new_node;
             }
             list->end = new_node;
@@ -116,3 +118,30 @@ boolean list_erase(LIST **list) {
     }
     return FALSE;
 }
+
+BIG_NUMBER *previous_key(const LIST *list, int key) {
+    if (list != NULL) {
+        NODE *actual_node;
+        actual_node = list->start;
+        while (actual_node != NULL) {
+            if (get_key(actual_node->item) == key)
+                return actual_node->previous->item;
+            actual_node = actual_node->next;
+        }
+    }
+    return NULL;
+}
+
+BIG_NUMBER *next_key(const LIST *list, int key) {
+    if (list != NULL) {
+        NODE *actual_node;
+        actual_node = list->start;
+        while (actual_node != NULL) {
+            if (get_key(actual_node->item) == key)
+                return actual_node->next->item;
+            actual_node = actual_node->next;
+        }
+    }
+    return NULL;
+}
+

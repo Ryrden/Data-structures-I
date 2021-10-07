@@ -16,6 +16,8 @@ boolean list_remover_item(LIST *list, int key);
 int list_size(const LIST *list);
 boolean list_empty(const LIST *list);
 boolean list_full(const LIST *list);
+BIG_NUMBER *previous_key(const LIST *list, int key);
+BIG_NUMBER *next_key(const LIST *list, int key);
 BIG_NUMBER *sequential_search(const LIST *list, int key);
 void print_list(const LIST *list);
 
