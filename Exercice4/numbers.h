@@ -20,7 +20,8 @@ char *sum_two_parts(const BIG_NUMBER *part1, const BIG_NUMBER *part2, int *carry
 void print_number_part(const BIG_NUMBER *part);
 int get_key(const BIG_NUMBER *part);
 void print_number(const BIG_NUMBER *part);
-int is_bigger_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two);
-int is_smaller(char *first_integer, char *second_integer);
+boolean is_bigger_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two);
+boolean is_smaller_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two);
+boolean is_equal_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two);
 
 #endif //NUMBERS_H

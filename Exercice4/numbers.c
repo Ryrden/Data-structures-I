@@ -5,7 +5,7 @@
 
 struct big_numbers_st {
     int key;
-    char number_part[5];
+    char number_part[6];
 };
 
 operation select_command(char *command) {
@@ -97,67 +97,58 @@ char *sum_two_parts(const BIG_NUMBER *num1_part, const BIG_NUMBER *num2_part, in
     return sum_answer;
 }
 
-int is_bigger_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two) {
+boolean is_bigger_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two) {
+    char *ptr_num1 = big_number_one->number_part;
+    char *ptr_num2 = big_number_two->number_part;
 
-    int num1 = atoi(big_number_one->number_part);
-    int num2 = atoi(big_number_two->number_part);
+    while (*ptr_num1 == *ptr_num2) {
+        ptr_num1++;
+        ptr_num2++;
+    }
+    int num1 = ptr_num1[0] - '0';
+    int num2 = ptr_num2[0] - '0';
+
+    if (big_number_one->number_part[0] != '-' && big_number_two->number_part[0] == '-')
+        return TRUE;
+    else if (big_number_one->number_part[0] == '-' && big_number_two->number_part[0] != '-')
+        return FALSE;
+    else if (strlen(big_number_one->number_part) > strlen(big_number_two->number_part))
+        return TRUE;
+    else if (strlen(big_number_one->number_part) < strlen(big_number_two->number_part))
+        return FALSE;
 
     return num1 > num2;
 }
 
-int is_smaller(char *first_integer, char *second_integer) {
-    boolean is_smaller = FALSE;
-    char *str1 = first_integer;
-    char *str2 = second_integer;
+boolean is_smaller_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two) {
+    char *ptr_num1 = big_number_one->number_part;
+    char *ptr_num2 = big_number_two->number_part;
 
-    while (*str1 == '0') {
-        str1++;
-        strcpy(first_integer, str1);
-        str1 = first_integer;
-    }
-    while (*str2 == '0') {
-        str2++;
-        strcpy(second_integer, str2);
-        str2 = second_integer;
-    }
-
-    if (first_integer[0] != '-' && second_integer[0] != '-') {
-        if (strlen(first_integer) < strlen(second_integer)) {
-            is_smaller = TRUE;
-        } else if (strlen(first_integer) == strlen(second_integer)) {
-            int len = strlen(first_integer);
-            int index = 0;
-            while (len > 0) {
-                if (first_integer[index] < second_integer[index]) {
-                    is_smaller = TRUE;
-                    break;
-                }
-                len--;
-                index++;
-            }
-        }
-    } else {
-        if (first_integer[0] == '-' && second_integer[0] != '-') {
-            is_smaller = TRUE;
-        } else if (first_integer[0] == '-' && second_integer[0] == '-') {
-            str1++;
-            str2++;
-            if (strlen(str1) > strlen(str2)) {
-                is_smaller = TRUE;
-            } else if (strlen(str1) == strlen(str2)) {
-                int len = strlen(str1);
-                int index = 0;
-                while (len > 0) {
-                    if (str1[index] > str2[index]) {
-                        is_smaller = TRUE;
-                        break;
-                    }
-                    len--;
-                    index++;
-                }
-            }
+    while (*ptr_num1 == *ptr_num2) {
+        ptr_num1++;
+        ptr_num2++;
+        if (!(*ptr_num1) && !(*ptr_num2)){
+            return FALSE;
         }
     }
+    int num1 = ptr_num1[0] - '0';
+    int num2 = ptr_num2[0] - '0';
 
-    return is_smaller;
+    if (big_number_one->number_part[0] == '-' && big_number_two->number_part[0] != '-')
+        return TRUE;
+    else if (big_number_one->number_part[0] != '-' && big_number_two->number_part[0] == '-')
+        return FALSE;
+    else if (strlen(big_number_one->number_part) < strlen(big_number_two->number_part))
+        return TRUE;
+    else if (strlen(big_number_one->number_part) > strlen(big_number_two->number_part))
+        return FALSE;
+
+    return num1 < num2;
+}
+
+boolean is_equal_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two) {
+    char *ptr_num1 = big_number_one->number_part;
+    char *ptr_num2 = big_number_two->number_part;
+
+    return !strcmp(ptr_num1,ptr_num2);
 }

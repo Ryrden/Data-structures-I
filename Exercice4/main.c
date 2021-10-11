@@ -104,42 +104,92 @@ int main() {
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
-            len_digit_part = partitions_int1;
-            if (partitions_int1 > partitions_int2) {
+            if (partitions_int1 > partitions_int2 || (*str1 != '-' && *str2 == '-')) {
                 is_bigger = TRUE;
-            } else {
-                for (int i = 1; i <= len_digit_part; i++) {
-                    if (is_bigger_part(sequential_search(big_number_one, i), sequential_search(big_number_two, i))) {
-                        is_bigger = TRUE;
-                        break;
-                    }
+            } else if (partitions_int1 == partitions_int2) {
+                int part_index = 1;
+                BIG_NUMBER *num1_part = sequential_search(big_number_one, part_index);
+                BIG_NUMBER *num2_part = sequential_search(big_number_two, part_index);
+                while (is_equal_part(num1_part, num2_part)) {
+                    part_index++;
+                    num1_part = sequential_search(big_number_one, part_index);
+                    num2_part = sequential_search(big_number_two, part_index);
                 }
+
+                if (is_bigger_part(num1_part, num2_part))
+                    is_bigger = TRUE;
             }
 
             if (is_bigger)
                 printf("Resultado :: True\n");
             else
                 printf("Resultado :: False\n");
-
         } else if (select_command(command) == menor) {
-            if (is_smaller(first_integer, second_integer))
+            boolean is_smaller = FALSE;
+            char *str1 = first_integer;
+            char *str2 = second_integer;
+            while (*str1 == '0') {
+                str1++;
+                strcpy(first_integer, str1);
+                str1 = first_integer;
+            }
+            while (*str2 == '0') {
+                str2++;
+                strcpy(second_integer, str2);
+                str2 = second_integer;
+            }
+
+            add_number_to_list(first_integer, big_number_one, &partitions_int1);
+            add_number_to_list(second_integer, big_number_two, &partitions_int2);
+
+            if (partitions_int1 < partitions_int2 || (*str1 == '-' && *str2 != '-')) {
+                is_smaller = TRUE;
+            } else if (partitions_int1 == partitions_int2) {
+                int part_index = 1;
+                BIG_NUMBER *num1_part = sequential_search(big_number_one, part_index);
+                BIG_NUMBER *num2_part = sequential_search(big_number_two, part_index);
+                while (is_equal_part(num1_part, num2_part)) {
+                    part_index++;
+                    num1_part = sequential_search(big_number_one, part_index);
+                    num2_part = sequential_search(big_number_two, part_index);
+                }
+
+                if (is_smaller_part(num1_part, num2_part))
+                    is_smaller = TRUE;
+            }
+
+            if (is_smaller)
                 printf("Resultado :: True\n");
             else
                 printf("Resultado :: False\n");
         } else if (select_command(command) == igual) {
             boolean is_equal = TRUE;
+
             char *str1 = first_integer;
             char *str2 = second_integer;
-            if (strlen(first_integer) == strlen(second_integer)) {
-                int len = strlen(first_integer);
-                while (len > 0) {
-                    if (*str1++ != *str2++) {
+            while (*str1 == '0') {
+                str1++;
+                strcpy(first_integer, str1);
+                str1 = first_integer;
+            }
+            while (*str2 == '0') {
+                str2++;
+                strcpy(second_integer, str2);
+                str2 = second_integer;
+            }
+
+            add_number_to_list(first_integer, big_number_one, &partitions_int1);
+            add_number_to_list(second_integer, big_number_two, &partitions_int2);
+
+            if (partitions_int1 == partitions_int2) {
+                len_digit_part = partitions_int1 = partitions_int2;
+                for (int i = 1; i <= len_digit_part; i++) {
+                    if (!is_equal_part(sequential_search(big_number_one, i), sequential_search(big_number_two, i))) {
                         is_equal = FALSE;
                         break;
                     }
-                    len--;
                 }
-            } else {
+            } else if (partitions_int1 != partitions_int2) {
                 is_equal = FALSE;
             }
 
@@ -167,13 +217,22 @@ void add_number_to_list(char *int_to_str, LIST *big_number, int *partitions_num)
     int max = strlen(int_to_str) / 4;
     int mod = strlen(int_to_str) % 4;
     if (mod > 0) {
-        char answer[mod + 1];
-        strncpy(answer, str, mod);
-        answer[mod] = '\0';
         key++;
+        if (mod == 1 && int_to_str[mod - 1] == '-') {
+            char answer[6];
+            strncpy(answer, str, 5);
+            answer[5] = '\0';
+            number_part = create_number_part(answer, key, 5);
+            max--;
+            mod = 5;
+        } else {
+            char answer[mod + 1];
+            strncpy(answer, str, mod);
+            answer[mod] = '\0';
+            number_part = create_number_part(answer, key, mod);
+        }
 
         //Adiciona na lista
-        number_part = create_number_part(answer, key, mod);
         list_insert(big_number, number_part);
         str += mod;
     }
