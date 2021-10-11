@@ -69,15 +69,25 @@ int main() {
 
             char sum[100][5] = {};
             for (int j = len_digit_part; j > 0; j--) {
-                //print_number_part(sequential_search(big_number_one, j));
-                //print_number_part(sequential_search(big_number_two, j));
-                char *temp_sum = sum_two_parts(sequential_search(big_number_one, j), sequential_search(big_number_two, j), &carry);
-                if (j != 1) {
-                    strcpy(sum[j - 1], temp_sum);
-                } else {
+                BIG_NUMBER *num1_part = sequential_search(big_number_one, j);
+                BIG_NUMBER *num2_part = sequential_search(big_number_two, j);
+                char *temp_sum = sum_two_parts(num1_part, num2_part, &carry);
+
+                strcpy(sum[j - 1], temp_sum);
+                if (j == 1) {
                     char *index = temp_sum;
                     while (*index++ == '0')
-                        strcpy(sum[j - 1], index);
+                        strcpy(sum[0], index);
+                    if (carry == 1) {
+                        int move_right = len_digit_part;
+                        while (move_right > 1) {
+                            strcpy(sum[move_right], sum[move_right - 1]);
+                            move_right--;
+                        }
+                        strcpy(sum[1], temp_sum);
+                        strcpy(sum[0], "1");
+                        len_digit_part++;
+                    }
                 }
                 free(temp_sum);
             }
@@ -85,7 +95,6 @@ int main() {
             for (int k = 0; k < len_digit_part; k++)
                 printf("%s", sum[k]);
             printf("\n");
-
         } else if (select_command(command) == maior) {
             boolean is_bigger = FALSE;
             char *str1 = first_integer;
@@ -202,6 +211,7 @@ int main() {
         }
         list_erase(&big_number_one);
         list_erase(&big_number_two);
+        getchar();
     }
     return EXIT_SUCCESS;
 }
