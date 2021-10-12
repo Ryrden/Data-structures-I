@@ -15,12 +15,14 @@
 
 void add_number_to_list(char *int_to_str, LIST *big_number, int *partitions_num);
 void add_zeros_to_sum(char *first_integer, char *second_integer);
-void remove_zeros(char *first_integer, char *second_integer);
-char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition_len);
-static char **create_sum();
-static void free_sum(char **sum);
-void print_sum(char **sum, int partition_len);
+void remove_extra_zeros(char *first_integer, char *second_integer);
 int find_different_MSD(LIST *big_number_one, LIST *big_number_two);
+char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition_len);
+void print_sum(char **sum, int partition_len);
+char **create_sum();
+void free_sum(char **sum);
+
+boolean big_number_cmp(LIST *big_number_one, LIST *big_number_two, int partition_len);
 
 int main() {
 
@@ -57,7 +59,7 @@ int main() {
             free_sum(sum);
         } else if (select_command(command) == maior) {
 
-            remove_zeros(first_integer, second_integer);
+            remove_extra_zeros(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
@@ -80,7 +82,7 @@ int main() {
                 printf("Resultado :: False\n");
         } else if (select_command(command) == menor) {
 
-            remove_zeros(first_integer, second_integer);
+            remove_extra_zeros(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
@@ -103,7 +105,7 @@ int main() {
                 printf("Resultado :: False\n");
         } else if (select_command(command) == igual) {
 
-            remove_zeros(first_integer, second_integer);
+            remove_extra_zeros(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
@@ -112,14 +114,7 @@ int main() {
 
             boolean is_equal = TRUE;
             if (partitions_int1 == partitions_int2) {
-                for (int i = 1; i <= partition_len; i++) {
-                    BIG_NUMBER *num1_part = sequential_search(big_number_one, i);
-                    BIG_NUMBER *num2_part = sequential_search(big_number_two, i);
-                    if (!is_equal_part(num1_part, num2_part)) {
-                        is_equal = FALSE;
-                        break;
-                    }
-                }
+                is_equal = big_number_cmp(big_number_one, big_number_two, partition_len);
             } else {
                 is_equal = FALSE;
             }
@@ -206,7 +201,7 @@ void add_zeros_to_sum(char *first_integer, char *second_integer) {
     }
 }
 
-void remove_zeros(char *first_integer, char *second_integer) {
+void remove_extra_zeros(char *first_integer, char *second_integer) {
     char *str1 = first_integer;
     char *str2 = second_integer;
     while (*str1 == '0') {
@@ -219,6 +214,28 @@ void remove_zeros(char *first_integer, char *second_integer) {
         strcpy(second_integer, str2);
         str2 = second_integer;
     }
+}
+
+int find_different_MSD(LIST *big_number_one, LIST *big_number_two) {
+    int part_index = 1;
+    BIG_NUMBER *num1_part = sequential_search(big_number_one, part_index);
+    BIG_NUMBER *num2_part = sequential_search(big_number_two, part_index);
+    while (is_equal_part(num1_part, num2_part)) {
+        part_index += 1;
+        num1_part = sequential_search(big_number_one, part_index);
+        num2_part = sequential_search(big_number_two, part_index);
+    }
+    return part_index;
+}
+
+boolean big_number_cmp(LIST *big_number_one, LIST *big_number_two, int partition_len) {
+    for (int i = 1; i <= partition_len; i++) {
+        BIG_NUMBER *num1_part = sequential_search(big_number_one, i);
+        BIG_NUMBER *num2_part = sequential_search(big_number_two, i);
+        if (!is_equal_part(num1_part, num2_part))
+            return FALSE;
+    }
+    return TRUE;
 }
 
 char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition_len) {
@@ -250,7 +267,7 @@ char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition
     return sum;
 }
 
-static char **create_sum() {
+char **create_sum() {
     char **sum = (char **)malloc(sizeof(char *) * 100);
 
     if (sum == NULL)
@@ -264,7 +281,7 @@ static char **create_sum() {
     return sum;
 }
 
-static void free_sum(char **sum) {
+void free_sum(char **sum) {
     for (int i = 0; i < 100; i++)
         free(sum[i]);
     free(sum);
@@ -275,16 +292,4 @@ void print_sum(char **sum, int partition_len) {
     for (int i = 0; i < partition_len; i++)
         printf("%s", sum[i]);
     printf("\n");
-}
-
-int find_different_MSD(LIST *big_number_one, LIST *big_number_two) {
-    int part_index = 1;
-    BIG_NUMBER *num1_part = sequential_search(big_number_one, part_index);
-    BIG_NUMBER *num2_part = sequential_search(big_number_two, part_index);
-    while (is_equal_part(num1_part, num2_part)) {
-        part_index += 1;
-        num1_part = sequential_search(big_number_one, part_index);
-        num2_part = sequential_search(big_number_two, part_index);
-    }
-    return part_index;
 }
