@@ -20,6 +20,7 @@ char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition
 static char **create_sum();
 static void free_sum(char **sum);
 void print_sum(char **sum, int partition_len);
+int find_different_MSD(LIST *big_number_one, LIST *big_number_two);
 
 int main() {
 
@@ -65,14 +66,9 @@ int main() {
             if (partitions_int1 > partitions_int2 || (first_integer[0] != '-' && second_integer[0] == '-')) {
                 is_bigger = TRUE;
             } else if (partitions_int1 == partitions_int2) {
-                int part_index = 1;
+                int part_index = find_different_MSD(big_number_one, big_number_two);
                 BIG_NUMBER *num1_part = sequential_search(big_number_one, part_index);
                 BIG_NUMBER *num2_part = sequential_search(big_number_two, part_index);
-                while (is_equal_part(num1_part, num2_part)) {
-                    part_index++;
-                    num1_part = sequential_search(big_number_one, part_index);
-                    num2_part = sequential_search(big_number_two, part_index);
-                }
 
                 if (is_bigger_part(num1_part, num2_part))
                     is_bigger = TRUE;
@@ -93,14 +89,9 @@ int main() {
             if (partitions_int1 < partitions_int2 || (first_integer[0] == '-' && second_integer[0] != '-')) {
                 is_smaller = TRUE;
             } else if (partitions_int1 == partitions_int2) {
-                int part_index = 1;
+                int part_index = find_different_MSD(big_number_one, big_number_two);
                 BIG_NUMBER *num1_part = sequential_search(big_number_one, part_index);
                 BIG_NUMBER *num2_part = sequential_search(big_number_two, part_index);
-                while (is_equal_part(num1_part, num2_part)) {
-                    part_index++;
-                    num1_part = sequential_search(big_number_one, part_index);
-                    num2_part = sequential_search(big_number_two, part_index);
-                }
 
                 if (is_smaller_part(num1_part, num2_part))
                     is_smaller = TRUE;
@@ -284,4 +275,16 @@ void print_sum(char **sum, int partition_len) {
     for (int i = 0; i < partition_len; i++)
         printf("%s", sum[i]);
     printf("\n");
+}
+
+int find_different_MSD(LIST *big_number_one, LIST *big_number_two) {
+    int part_index = 1;
+    BIG_NUMBER *num1_part = sequential_search(big_number_one, part_index);
+    BIG_NUMBER *num2_part = sequential_search(big_number_two, part_index);
+    while (is_equal_part(num1_part, num2_part)) {
+        part_index += 1;
+        num1_part = sequential_search(big_number_one, part_index);
+        num2_part = sequential_search(big_number_two, part_index);
+    }
+    return part_index;
 }
