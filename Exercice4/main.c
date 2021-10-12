@@ -16,6 +16,10 @@
 void add_number_to_list(char *int_to_str, LIST *big_number, int *partitions_num);
 void add_zeros_to_sum(char *first_integer, char *second_integer);
 void remove_zeros(char *first_integer, char *second_integer);
+char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition_len);
+static char **create_sum();
+static void free_sum(char **sum);
+void print_sum(char **sum, int partition_len);
 
 int main() {
 
@@ -45,35 +49,11 @@ int main() {
 
             partition_len = partitions_int1 = partitions_int2;
 
-            char sum[100][NumberPart + 1] = {};
-            int carry = 0;
-            for (int j = partition_len; j > 0; j--) {
-                BIG_NUMBER *num1_part = sequential_search(big_number_one, j);
-                BIG_NUMBER *num2_part = sequential_search(big_number_two, j);
-                char *temp_sum = sum_two_parts(num1_part, num2_part, &carry);
+            char **sum;
+            sum = sum_big_number(big_number_one, big_number_two, &partition_len);
 
-                strcpy(sum[j - 1], temp_sum);
-                if (j == 1) {
-                    char *index = temp_sum;
-                    while (*index++ == '0')
-                        strcpy(sum[0], index);
-                    if (carry == 1) {
-                        int move_right = partition_len;
-                        while (move_right > 1) {
-                            strcpy(sum[move_right], sum[move_right - 1]);
-                            move_right--;
-                        }
-                        strcpy(sum[1], temp_sum);
-                        strcpy(sum[0], "1");
-                        partition_len++;
-                    }
-                }
-                free(temp_sum);
-            }
-            printf("Resultado :: ");
-            for (int k = 0; k < partition_len; k++)
-                printf("%s", sum[k]);
-            printf("\n");
+            print_sum(sum, partition_len);
+            free_sum(sum);
         } else if (select_command(command) == maior) {
 
             remove_zeros(first_integer, second_integer);
@@ -103,13 +83,13 @@ int main() {
             else
                 printf("Resultado :: False\n");
         } else if (select_command(command) == menor) {
-            boolean is_smaller = FALSE;
 
             remove_zeros(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
+            boolean is_smaller = FALSE;
             if (partitions_int1 < partitions_int2 || (first_integer[0] == '-' && second_integer[0] != '-')) {
                 is_smaller = TRUE;
             } else if (partitions_int1 == partitions_int2) {
@@ -131,7 +111,6 @@ int main() {
             else
                 printf("Resultado :: False\n");
         } else if (select_command(command) == igual) {
-            boolean is_equal = TRUE;
 
             remove_zeros(first_integer, second_integer);
 
@@ -140,9 +119,12 @@ int main() {
 
             partition_len = partitions_int1 = partitions_int2;
 
+            boolean is_equal = TRUE;
             if (partitions_int1 == partitions_int2) {
                 for (int i = 1; i <= partition_len; i++) {
-                    if (!is_equal_part(sequential_search(big_number_one, i), sequential_search(big_number_two, i))) {
+                    BIG_NUMBER *num1_part = sequential_search(big_number_one, i);
+                    BIG_NUMBER *num2_part = sequential_search(big_number_two, i);
+                    if (!is_equal_part(num1_part, num2_part)) {
                         is_equal = FALSE;
                         break;
                     }
@@ -246,4 +228,60 @@ void remove_zeros(char *first_integer, char *second_integer) {
         strcpy(second_integer, str2);
         str2 = second_integer;
     }
+}
+
+char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition_len) {
+    char **sum = create_sum();
+    int carry = 0;
+    for (int j = *partition_len; j > 0; j--) {
+        BIG_NUMBER *num1_part = sequential_search(big_number_one, j);
+        BIG_NUMBER *num2_part = sequential_search(big_number_two, j);
+        char *temp_sum = sum_two_parts(num1_part, num2_part, &carry);
+
+        strcpy(sum[j - 1], temp_sum);
+        if (j == 1) {
+            char *index = temp_sum;
+            while (*index++ == '0')
+                strcpy(sum[0], index);
+            if (carry == 1) {
+                int move_right = *partition_len;
+                while (move_right > 1) {
+                    strcpy(sum[move_right], sum[move_right - 1]);
+                    move_right--;
+                }
+                strcpy(sum[1], temp_sum);
+                strcpy(sum[0], "1");
+                (*partition_len)++;
+            }
+        }
+        free(temp_sum);
+    }
+    return sum;
+}
+
+static char **create_sum() {
+    char **sum = (char **)malloc(sizeof(char *) * 100);
+
+    if (sum == NULL)
+        exit(EXIT_FAILURE);
+
+    for (int i = 0; i < 100; i++) {
+        sum[i] = (char *)malloc(sizeof(char) * (NumberPart + 1));
+        if (sum[i] == NULL)
+            exit(EXIT_FAILURE);
+    }
+    return sum;
+}
+
+static void free_sum(char **sum) {
+    for (int i = 0; i < 100; i++)
+        free(sum[i]);
+    free(sum);
+}
+
+void print_sum(char **sum, int partition_len) {
+    printf("Resultado :: ");
+    for (int i = 0; i < partition_len; i++)
+        printf("%s", sum[i]);
+    printf("\n");
 }

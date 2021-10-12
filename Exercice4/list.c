@@ -66,7 +66,7 @@ boolean list_remove_item(LIST *list, int key) {
         NODE *actual_node;
         NODE *previous_node = NULL;
         actual_node = list->start;
-        while (actual_node != NULL /*&& (item_get_key(actual_node->item) != key)*/) {
+        while (actual_node != NULL && get_key(actual_node->item) != key) {
             previous_node = actual_node;
             actual_node = actual_node->next;
         }
