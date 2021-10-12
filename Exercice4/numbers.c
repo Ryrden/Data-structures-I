@@ -51,8 +51,8 @@ void print_number_part(const BIG_NUMBER *part) {
 }
 
 char *sum_two_parts(const BIG_NUMBER *num1_part, const BIG_NUMBER *num2_part, int *carry) {
-    char sum[5];
-    char *sum_answer = (char *)malloc(sizeof(char) * 5);
+    char sum[NumberPart + 1];
+    char *sum_answer = (char *)malloc(sizeof(char) * (NumberPart + 1));
     int num1 = atoi(num1_part->number_part);
     int num2 = atoi(num2_part->number_part);
 
@@ -127,7 +127,7 @@ boolean is_smaller_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two) 
     while (*ptr_num1 == *ptr_num2) {
         ptr_num1++;
         ptr_num2++;
-        if (!(*ptr_num1) && !(*ptr_num2)){
+        if (!(*ptr_num1) && !(*ptr_num2)) {
             return FALSE;
         }
     }
@@ -150,5 +150,5 @@ boolean is_equal_part(BIG_NUMBER *big_number_one, BIG_NUMBER *big_number_two) {
     char *ptr_num1 = big_number_one->number_part;
     char *ptr_num2 = big_number_two->number_part;
 
-    return !strcmp(ptr_num1,ptr_num2);
+    return !strcmp(ptr_num1, ptr_num2);
 }

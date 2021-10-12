@@ -1,6 +1,7 @@
 #ifndef NUMBERS_H
 #define NUMBERS_H
 #include "util.h"
+#define NumberPart 4
 
 typedef struct big_numbers_st BIG_NUMBER;
 

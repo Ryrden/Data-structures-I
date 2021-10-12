@@ -14,6 +14,8 @@
 */
 
 void add_number_to_list(char *int_to_str, LIST *big_number, int *partitions_num);
+void add_zeros_to_sum(char *first_integer, char *second_integer);
+void remove_zeros(char *first_integer, char *second_integer);
 
 int main() {
 
@@ -22,8 +24,7 @@ int main() {
     char command[6];
     char first_integer[300];
     char second_integer[300];
-    int len_digit_part;
-    int carry = 0;
+    int partition_len;
 
     for (int i = 0; i < n; i++) {
         LIST *big_number_one = create_list();
@@ -36,39 +37,17 @@ int main() {
         int partitions_int2 = 0;
 
         if (select_command(command) == soma) {
-            //converte inteiro para string
 
-            if (strlen(first_integer) != strlen(second_integer)) {
-                if (strlen(first_integer) > strlen(second_integer)) {
-                    int zeros_to_add = strlen(first_integer) - strlen(second_integer);
-                    for (int j = 0; j < zeros_to_add; j++) {
-                        second_integer[strlen(second_integer) + 1] = '\0';
-                        for (int k = strlen(second_integer) - 1; k >= 0; k--) {
-                            second_integer[k + 1] = second_integer[k];
-                            if (k == 0)
-                                second_integer[k] = '0';
-                        }
-                    }
-                } else {
-                    int zeros_to_add = strlen(second_integer) - strlen(first_integer);
-                    for (int j = 0; j < zeros_to_add; j++) {
-                        first_integer[strlen(first_integer) + 1] = '\0';
-                        for (int k = strlen(first_integer) - 1; k >= 0; k--) {
-                            first_integer[k + 1] = first_integer[k];
-                            if (k == 0)
-                                first_integer[k] = '0';
-                        }
-                    }
-                }
-            }
+            add_zeros_to_sum(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
-            len_digit_part = partitions_int1 = partitions_int2;
+            partition_len = partitions_int1 = partitions_int2;
 
-            char sum[100][5] = {};
-            for (int j = len_digit_part; j > 0; j--) {
+            char sum[100][NumberPart + 1] = {};
+            int carry = 0;
+            for (int j = partition_len; j > 0; j--) {
                 BIG_NUMBER *num1_part = sequential_search(big_number_one, j);
                 BIG_NUMBER *num2_part = sequential_search(big_number_two, j);
                 char *temp_sum = sum_two_parts(num1_part, num2_part, &carry);
@@ -79,41 +58,31 @@ int main() {
                     while (*index++ == '0')
                         strcpy(sum[0], index);
                     if (carry == 1) {
-                        int move_right = len_digit_part;
+                        int move_right = partition_len;
                         while (move_right > 1) {
                             strcpy(sum[move_right], sum[move_right - 1]);
                             move_right--;
                         }
                         strcpy(sum[1], temp_sum);
                         strcpy(sum[0], "1");
-                        len_digit_part++;
+                        partition_len++;
                     }
                 }
                 free(temp_sum);
             }
             printf("Resultado :: ");
-            for (int k = 0; k < len_digit_part; k++)
+            for (int k = 0; k < partition_len; k++)
                 printf("%s", sum[k]);
             printf("\n");
         } else if (select_command(command) == maior) {
-            boolean is_bigger = FALSE;
-            char *str1 = first_integer;
-            char *str2 = second_integer;
-            while (*str1 == '0') {
-                str1++;
-                strcpy(first_integer, str1);
-                str1 = first_integer;
-            }
-            while (*str2 == '0') {
-                str2++;
-                strcpy(second_integer, str2);
-                str2 = second_integer;
-            }
+
+            remove_zeros(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
-            if (partitions_int1 > partitions_int2 || (*str1 != '-' && *str2 == '-')) {
+            boolean is_bigger = FALSE;
+            if (partitions_int1 > partitions_int2 || (first_integer[0] != '-' && second_integer[0] == '-')) {
                 is_bigger = TRUE;
             } else if (partitions_int1 == partitions_int2) {
                 int part_index = 1;
@@ -135,23 +104,13 @@ int main() {
                 printf("Resultado :: False\n");
         } else if (select_command(command) == menor) {
             boolean is_smaller = FALSE;
-            char *str1 = first_integer;
-            char *str2 = second_integer;
-            while (*str1 == '0') {
-                str1++;
-                strcpy(first_integer, str1);
-                str1 = first_integer;
-            }
-            while (*str2 == '0') {
-                str2++;
-                strcpy(second_integer, str2);
-                str2 = second_integer;
-            }
+
+            remove_zeros(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
-            if (partitions_int1 < partitions_int2 || (*str1 == '-' && *str2 != '-')) {
+            if (partitions_int1 < partitions_int2 || (first_integer[0] == '-' && second_integer[0] != '-')) {
                 is_smaller = TRUE;
             } else if (partitions_int1 == partitions_int2) {
                 int part_index = 1;
@@ -174,31 +133,21 @@ int main() {
         } else if (select_command(command) == igual) {
             boolean is_equal = TRUE;
 
-            char *str1 = first_integer;
-            char *str2 = second_integer;
-            while (*str1 == '0') {
-                str1++;
-                strcpy(first_integer, str1);
-                str1 = first_integer;
-            }
-            while (*str2 == '0') {
-                str2++;
-                strcpy(second_integer, str2);
-                str2 = second_integer;
-            }
+            remove_zeros(first_integer, second_integer);
 
             add_number_to_list(first_integer, big_number_one, &partitions_int1);
             add_number_to_list(second_integer, big_number_two, &partitions_int2);
 
+            partition_len = partitions_int1 = partitions_int2;
+
             if (partitions_int1 == partitions_int2) {
-                len_digit_part = partitions_int1 = partitions_int2;
-                for (int i = 1; i <= len_digit_part; i++) {
+                for (int i = 1; i <= partition_len; i++) {
                     if (!is_equal_part(sequential_search(big_number_one, i), sequential_search(big_number_two, i))) {
                         is_equal = FALSE;
                         break;
                     }
                 }
-            } else if (partitions_int1 != partitions_int2) {
+            } else {
                 is_equal = FALSE;
             }
 
@@ -211,7 +160,6 @@ int main() {
         }
         list_erase(&big_number_one);
         list_erase(&big_number_two);
-        getchar();
     }
     return EXIT_SUCCESS;
 }
@@ -229,12 +177,12 @@ void add_number_to_list(char *int_to_str, LIST *big_number, int *partitions_num)
     if (mod > 0) {
         key++;
         if (mod == 1 && int_to_str[mod - 1] == '-') {
-            char answer[6];
-            strncpy(answer, str, 5);
-            answer[5] = '\0';
-            number_part = create_number_part(answer, key, 5);
+            char answer[NumberPart + 2];
+            strncpy(answer, str, NumberPart + 1);
+            answer[NumberPart + 1] = '\0';
+            number_part = create_number_part(answer, key, NumberPart + 1);
             max--;
-            mod = 5;
+            mod = NumberPart + 1;
         } else {
             char answer[mod + 1];
             strncpy(answer, str, mod);
@@ -242,21 +190,60 @@ void add_number_to_list(char *int_to_str, LIST *big_number, int *partitions_num)
             number_part = create_number_part(answer, key, mod);
         }
 
-        //Adiciona na lista
         list_insert(big_number, number_part);
         str += mod;
     }
     while (cont < max) {
-        char answer[5];
-        strncpy(answer, str, 4);
-        answer[4] = '\0';
+        char answer[NumberPart + 1];
+        strncpy(answer, str, NumberPart);
+        answer[NumberPart] = '\0';
         key++;
 
-        //Adiciona na lista
-        number_part = create_number_part(answer, key, 4);
+        number_part = create_number_part(answer, key, NumberPart);
         list_insert(big_number, number_part);
-        str += 4;
+        str += NumberPart;
         cont++;
     }
     *partitions_num = key;
+}
+
+void add_zeros_to_sum(char *first_integer, char *second_integer) {
+    if (strlen(first_integer) != strlen(second_integer)) {
+        if (strlen(first_integer) > strlen(second_integer)) {
+            int zeros_to_add = strlen(first_integer) - strlen(second_integer);
+            for (int j = 0; j < zeros_to_add; j++) {
+                second_integer[strlen(second_integer) + 1] = '\0';
+                for (int k = strlen(second_integer) - 1; k >= 0; k--) {
+                    second_integer[k + 1] = second_integer[k];
+                    if (k == 0)
+                        second_integer[k] = '0';
+                }
+            }
+        } else {
+            int zeros_to_add = strlen(second_integer) - strlen(first_integer);
+            for (int j = 0; j < zeros_to_add; j++) {
+                first_integer[strlen(first_integer) + 1] = '\0';
+                for (int k = strlen(first_integer) - 1; k >= 0; k--) {
+                    first_integer[k + 1] = first_integer[k];
+                    if (k == 0)
+                        first_integer[k] = '0';
+                }
+            }
+        }
+    }
+}
+
+void remove_zeros(char *first_integer, char *second_integer) {
+    char *str1 = first_integer;
+    char *str2 = second_integer;
+    while (*str1 == '0') {
+        str1++;
+        strcpy(first_integer, str1);
+        str1 = first_integer;
+    }
+    while (*str2 == '0') {
+        str2++;
+        strcpy(second_integer, str2);
+        str2 = second_integer;
+    }
 }
