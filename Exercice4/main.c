@@ -259,7 +259,7 @@ char **sum_big_number(LIST *big_number_one, LIST *big_number_two, int *partition
                 }
                 strcpy(sum[1], temp_sum);
                 strcpy(sum[0], "1");
-                (*partition_len)++;
+                *partition_len += 1;
             }
         }
         free(temp_sum);
