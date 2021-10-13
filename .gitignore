@@ -1,6 +1,6 @@
 # Compiled source #
 ############
-.exe
+*.exe
 
 # Packages #
 ############
