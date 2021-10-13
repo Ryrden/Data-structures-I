@@ -1,0 +1,9 @@
+# Packages #
+############
+*.rar
+*.zip
+
+# Test Files #
+############
+*.in
+*.out
