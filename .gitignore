@@ -1,9 +1,13 @@
+# Compiled source #
+############
+.exe
+
 # Packages #
 ############
 *.rar
 *.zip
 
-# Test Files #
+# Test files #
 ############
 *.in
 *.out
