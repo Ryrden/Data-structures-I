@@ -62,7 +62,7 @@ char *sum_two_parts(const BIG_NUMBER *num1_part, const BIG_NUMBER *num2_part, in
         part_sum++;
 
     if (part_sum > 9999) {
-        char temp[6];
+        char temp[NumberPart + 2];
         *carry = 1;
         snprintf(temp, sizeof(temp), "%d", part_sum);
         char *mv_one_digit = temp;
@@ -70,28 +70,39 @@ char *sum_two_parts(const BIG_NUMBER *num1_part, const BIG_NUMBER *num2_part, in
         strcpy(sum, mv_one_digit);
     } else if (part_sum < 10) {
         *carry = 0;
-        char temp[2];
+        char temp[NumberPart - 2];
         strcpy(sum, "000");
         snprintf(temp, sizeof(temp), "%d", part_sum);
         strcat(sum, temp);
     } else if (part_sum < 100) {
         *carry = 0;
-        char temp[3];
+        char temp[NumberPart + 1];
         strcpy(sum, "00");
         snprintf(temp, sizeof(temp), "%d", part_sum);
         strcat(sum, temp);
     } else if (part_sum < 1000) {
         *carry = 0;
-        char temp[4];
+        char temp[NumberPart];
         strcpy(sum, "0");
         snprintf(temp, sizeof(temp), "%d", part_sum);
         strcat(sum, temp);
     } else if (part_sum > 1000) {
         *carry = 0;
-        char temp[5];
+        char temp[NumberPart + 1];
         snprintf(temp, sizeof(temp), "%d", part_sum);
         strcpy(sum, temp);
     }
+    //SOLUÇÃO PARA RESOLVER ESSE INUMEROS IFS, mas não deu muito certo em C, no linux sai merda na hora do print, 
+    //outro dia eu volto e resolvo isso quando estiver melhor em programação
+    /*else { 
+        *carry = 0;
+        char temp[NumberPart + 1];
+        snprintf(temp, sizeof(temp), "%d", part_sum);
+        int zero_amout = NumberPart - strlen(temp);
+        while (zero_amout-- > 0)
+            strcat(sum, "0");
+        strcat(sum, temp);
+    }*/
     strcpy(sum_answer, sum);
 
     return sum_answer;
