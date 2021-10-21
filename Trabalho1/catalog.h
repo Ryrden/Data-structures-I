@@ -14,4 +14,10 @@ typedef enum {
 
 operation select_command(char *command);
 
+char **create_found_games_catalog(int size_search);
+
+void print_found_games(char **found_games, int number_of_searches);
+
+void free_found_games_catalog(char **found_games, int size);
+
 #endif // CATALOG_H
