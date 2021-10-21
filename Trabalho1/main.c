@@ -27,7 +27,7 @@ int main() {
     catalog = create_list();
 
     char line[200];
-    int key = 1;
+    int key = 0;
     while (fgets(line, sizeof(line), arq1)) {
 
         while (1) {
@@ -36,26 +36,28 @@ int main() {
             // TRATAR ENTRADA - caracteres: ´╗┐
             while (*game_name < 'A')
                 game_name++;
-            
+
             int game_year = atoi(strtok(NULL, ";"));
 
             char *game_producer = strtok(NULL, ";");
+            game_producer[strlen(game_producer)-1] = '\0';
 
             // Registrar na estrutura game
+            key++;
             game = register_game(game_name, game_producer, game_year, key);
 
             // Registrar na lista catalogo
             list_insert(catalog, game);
 
-            printf("\n%s %d %s", game_name, game_year, game_producer);
-            key++;
             break;
         }
     }
 
+    int size_search = 1000;
+
     while (1) {
         char command[2];
-        scanf(" %[^(\r|\n)]*c", command);
+        scanf(" %s", command);
         getchar();
 
         if (select_command(command) == produtora) {
@@ -63,11 +65,28 @@ int main() {
             char producer[256];
             scanf(" %[^(\r|\n)]*c", producer);
             getchar();
-            // criar vetor de games
+
+            // Criar vetor de buscas
+            char **found_games;
+            found_games = create_found_games_catalog(size_search);
+            int number_of_register = key;
+            int search_number = 0;
 
             // buscar games da produtora
+            for (int i = 1; i <= number_of_register; i++) {
+                char *search = search_producer(sequential_search(catalog, i), producer);
+                if (search != FALSE) {
+                    strcpy(found_games[search_number], search);
+                    search_number++;
+                }
+            }
 
             // imprimir games da produtora
+            print_found_games(found_games, search_number);
+
+            // liberar vetor
+            free_found_games_catalog(found_games, size_search);
+
         } else if (select_command(command) == ano) {
             // ler ano
             int year;
@@ -104,6 +123,7 @@ int main() {
         } else if (select_command(command) == encerrar) {
             // liberar espaço
             // break
+            break;
         }
     }
 
