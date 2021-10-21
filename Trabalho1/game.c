@@ -24,9 +24,40 @@ GAME *register_game(char *name, char *producer, int year, int key) {
     return game;
 }
 
+char *search_producer(GAME *game, char *game_producer){
+    if(!strcmp(game->producer, game_producer)){
+        return game->name;
+    }
+
+    return FALSE;
+}
+
+char *search_year(GAME *game, int game_year){
+    if(game->year == game_year){
+        return game->name;
+    }
+
+    return FALSE;
+}
+
 int get_key(const GAME *game) {
     if (game != NULL)
         return game->key;
 
     return ERRO;
+}
+
+GAME *create_empty_item() {
+    GAME *item;
+
+    item = (GAME *)calloc(sizeof(GAME), 1);
+    return item;
+}
+
+int set_key(GAME *item, int key) {
+    if (item != NULL) {
+        item->key = key;
+        return TRUE;
+    }
+    return FALSE;
 }
