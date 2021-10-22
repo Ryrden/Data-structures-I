@@ -1,6 +1,7 @@
 #include "catalog.h"
 #include "game.h"
 #include "list.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,11 +130,26 @@ int main() {
 
         } else if (select_command(command) == mover_direita) {
             // ler posição
-
+            int index;
+            scanf("%d", &index);
             // ler quantas casas mover
-
+            int moves;
+            scanf("%d", &moves);
             // buscar posição no catalogo
+            
+            if (abs(moves - index) <= (key - index)) {
+                for (int i = 0; i < moves; i++) {
+                    GAME *game1 = sequential_search(catalog, index+1);
+                    GAME *game2 = sequential_search(catalog, index + 2);
 
+                    if (swap_games(game1, game2)) {
+                        index++;
+                    } else {
+                        printf("Error");
+                        break;
+                    }
+                }
+            }
             // executar movimentação
         } else if (select_command(command) == mover_esquerda) {
             // ler posição
