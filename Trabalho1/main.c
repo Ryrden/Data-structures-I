@@ -40,7 +40,7 @@ int main() {
             int game_year = atoi(strtok(NULL, ";"));
 
             char *game_producer = strtok(NULL, ";");
-            game_producer[strlen(game_producer)-1] = '\0';
+            game_producer[strlen(game_producer) - 1] = '\0';
 
             // Registrar na estrutura game
             key++;
@@ -91,7 +91,6 @@ int main() {
             int year;
             scanf("%d", &year);
 
-            
             // Criar vetor de buscas
             char **found_games;
             found_games = create_found_games_catalog(size_search);
@@ -111,7 +110,7 @@ int main() {
 
             // liberar vetor
             free_found_games_catalog(found_games, size_search);
-    
+
         } else if (select_command(command) == imprime) {
             // imprimir todos os jogos
             for (int i = 1; i <= number_of_register; i++) {
@@ -119,10 +118,14 @@ int main() {
             }
         } else if (select_command(command) == posicao) {
             // ler posição
+            int position;
+            scanf("%d", &position);
 
             // buscar o jogo que está salvo na posição X
+            GAME *game = sequential_search(catalog, position + 1);
 
             // imprimir jogo da posiçaõ
+            print_game_name(game);
 
         } else if (select_command(command) == mover_direita) {
             // ler posição
