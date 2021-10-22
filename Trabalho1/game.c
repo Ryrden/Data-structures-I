@@ -24,20 +24,24 @@ GAME *register_game(char *name, char *producer, int year, int key) {
     return game;
 }
 
-char *search_producer(GAME *game, char *game_producer){
-    if(!strcmp(game->producer, game_producer)){
+char *search_producer(GAME *game, char *game_producer) {
+    if (!strcmp(game->producer, game_producer)) {
         return game->name;
     }
 
     return FALSE;
 }
 
-char *search_year(GAME *game, int game_year){
-    if(game->year == game_year){
+char *search_year(GAME *game, int game_year) {
+    if (game->year == game_year) {
         return game->name;
     }
 
     return FALSE;
+}
+
+void print_game_name(GAME *game) {
+    printf("%s\n", game->name);
 }
 
 int get_key(const GAME *game) {

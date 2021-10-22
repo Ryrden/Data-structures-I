@@ -13,6 +13,8 @@ char *search_producer(GAME *game, char *game_producer);
 
 char *search_year(GAME *game, int game_year);
 
+void print_game_name(GAME *game);
+
 int set_key(GAME *item, int key);
 
 #endif // JOGO_H
