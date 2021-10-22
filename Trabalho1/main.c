@@ -102,9 +102,7 @@ int main() {
 
         } else if (select_command(command) == imprime) {
             // imprimir todos os jogos
-            for (int i = 0; i < number_of_register; i++) {
-                print_game_name(sequential_search(catalog, i));
-            }
+            print_catalog(catalog);
         } else if (select_command(command) == posicao) {
             // ler posição
             int position;
@@ -126,17 +124,7 @@ int main() {
             // buscar posição no catalogo
 
             if (index + moves < number_of_register) {
-                for (int i = 0; i < moves; i++) {
-                    GAME *game1 = sequential_search(catalog, index);
-                    GAME *game2 = sequential_search(catalog, index + 1);
-                    // executar movimentação
-                    if (swap_games(game1, game2)) {
-                        index++;
-                    } else {
-                        printf("Error");
-                        break;
-                    }
-                }
+                move_right(catalog, index, moves);
             } else {
                 printf("Error, out of range");
             }
@@ -149,18 +137,8 @@ int main() {
             scanf("%d", &moves);
             // buscar posição no catalogo
 
-            if (index - moves >= 0) {
-                for (int i = 0; i < moves; i++) {
-                    GAME *game1 = sequential_search(catalog, index);
-                    GAME *game2 = sequential_search(catalog, index - 1);
-                    // executar movimentação
-                    if (swap_games(game1, game2)) {
-                        index--;
-                    } else {
-                        printf("Error");
-                        break;
-                    }
-                }
+            if (index - moves > 0) {
+                move_left(catalog, index, moves);
             } else {
                 printf("Error, out of range");
             }
@@ -176,8 +154,8 @@ int main() {
 }
 
 void producers_found(LIST *catalog, char **found_games, char *producer, int *search_number) {
-    int registers = list_size(catalog);
-    for (int i = 0; i < registers; i++) {
+    int records = list_size(catalog);
+    for (int i = 0; i < records; i++) {
         char *search = search_producer(sequential_search(catalog, i), producer);
         if (search != FALSE) {
             strcpy(found_games[*search_number], search);
@@ -187,12 +165,47 @@ void producers_found(LIST *catalog, char **found_games, char *producer, int *sea
 }
 
 void years_found(LIST *catalog, char **found_games, int year, int *search_number) {
-    int registers = list_size(catalog);
-    for (int i = 0; i < registers; i++) {
+    int records = list_size(catalog);
+    for (int i = 0; i < records; i++) {
         char *search = search_year(sequential_search(catalog, i), year);
         if (search != FALSE) {
             strcpy(found_games[*search_number], search);
             *search_number += 1;
+        }
+    }
+}
+
+void print_catalog(list *catalog) {
+    int records = list_size(catalog);
+    for (int i = 0; i < records; i++) {
+        print_game_name(sequential_search(catalog, i));
+    }
+}
+
+void move_right(LIST *catalog, int index, int moves) {
+    for (int i = 0; i < moves; i++) {
+        GAME *game1 = sequential_search(catalog, index);
+        GAME *game2 = sequential_search(catalog, index + 1);
+        // executar movimentação
+        if (swap_games(game1, game2)) {
+            index++;
+        } else {
+            printf("Error");
+            break;
+        }
+    }
+}
+
+void move_left(LIST *catalog, int index, int moves) {
+    for (int i = 0; i < moves; i++) {
+        GAME *game1 = sequential_search(catalog, index);
+        GAME *game2 = sequential_search(catalog, index - 1);
+        // executar movimentação
+        if (swap_games(game1, game2)) {
+            index++;
+        } else {
+            printf("Error");
+            break;
         }
     }
 }
