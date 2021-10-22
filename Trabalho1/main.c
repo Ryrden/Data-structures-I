@@ -55,7 +55,7 @@ int main() {
     }
 
     int size_search = 100;
-    int number_of_register = key;
+    int number_of_register = list_size(catalog);
     while (1) {
         char command[2];
         scanf(" %s", command);
@@ -73,13 +73,7 @@ int main() {
             int search_number = 0;
 
             // buscar games da produtora
-            for (int i = 0; i < number_of_register; i++) {
-                char *search = search_producer(sequential_search(catalog, i), producer);
-                if (search != FALSE) {
-                    strcpy(found_games[search_number], search);
-                    search_number++;
-                }
-            }
+            producers_found(catalog, found_games, producer, &search_number);
 
             // imprimir games da produtora
             print_found_games(found_games, search_number);
@@ -98,13 +92,7 @@ int main() {
             int search_number = 0;
 
             // buscar games deste ano
-            for (int i = 0; i < number_of_register; i++) {
-                char *search = search_year(sequential_search(catalog, i), year);
-                if (search != FALSE) {
-                    strcpy(found_games[search_number], search);
-                    search_number++;
-                }
-            }
+            years_found(catalog, found_games, year, &search_number);
 
             // imprimir games da produtora
             print_found_games(found_games, search_number);
@@ -185,4 +173,26 @@ int main() {
     }
 
     return EXIT_SUCCESS;
+}
+
+void producers_found(LIST *catalog, char **found_games, char *producer, int *search_number) {
+    int registers = list_size(catalog);
+    for (int i = 0; i < registers; i++) {
+        char *search = search_producer(sequential_search(catalog, i), producer);
+        if (search != FALSE) {
+            strcpy(found_games[*search_number], search);
+            *search_number += 1;
+        }
+    }
+}
+
+void years_found(LIST *catalog, char **found_games, int year, int *search_number) {
+    int registers = list_size(catalog);
+    for (int i = 0; i < registers; i++) {
+        char *search = search_year(sequential_search(catalog, i), year);
+        if (search != FALSE) {
+            strcpy(found_games[*search_number], search);
+            *search_number += 1;
+        }
+    }
 }
