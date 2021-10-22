@@ -53,7 +53,7 @@ int main() {
         }
     }
 
-    int size_search = 1000;
+    int size_search = 100;
 
     while (1) {
         char command[2];
@@ -92,9 +92,28 @@ int main() {
             int year;
             scanf("%d", &year);
 
-            // buscar games deste ano
+            
+            // Criar vetor de buscas
+            char **found_games;
+            found_games = create_found_games_catalog(size_search);
+            int number_of_register = key;
+            int search_number = 0;
 
-            // imprimir games do ano
+            // buscar games deste ano
+            for (int i = 1; i <= number_of_register; i++) {
+                char *search = search_year(sequential_search(catalog, i), year);
+                if (search != FALSE) {
+                    strcpy(found_games[search_number], search);
+                    search_number++;
+                }
+            }
+
+            // imprimir games da produtora
+            print_found_games(found_games, search_number);
+
+            // liberar vetor
+            free_found_games_catalog(found_games, size_search);
+    
         } else if (select_command(command) == imprime) {
             // imprimir todos os jogos
         } else if (select_command(command) == posicao) {
