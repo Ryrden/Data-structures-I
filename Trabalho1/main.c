@@ -178,6 +178,7 @@ int main() {
             }
         } else if (select_command(command) == encerrar) {
             // liberar espaço
+            list_erase(&catalog);
             // break
             break;
         }
