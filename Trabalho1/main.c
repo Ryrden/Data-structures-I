@@ -54,7 +54,7 @@ int main() {
     }
 
     int size_search = 100;
-
+    int number_of_register = key;
     while (1) {
         char command[2];
         scanf(" %s", command);
@@ -69,7 +69,6 @@ int main() {
             // Criar vetor de buscas
             char **found_games;
             found_games = create_found_games_catalog(size_search);
-            int number_of_register = key;
             int search_number = 0;
 
             // buscar games da produtora
@@ -96,7 +95,6 @@ int main() {
             // Criar vetor de buscas
             char **found_games;
             found_games = create_found_games_catalog(size_search);
-            int number_of_register = key;
             int search_number = 0;
 
             // buscar games deste ano
@@ -116,6 +114,9 @@ int main() {
     
         } else if (select_command(command) == imprime) {
             // imprimir todos os jogos
+            for (int i = 1; i <= number_of_register; i++) {
+                print_game_name(sequential_search(catalog, i));
+            }
         } else if (select_command(command) == posicao) {
             // ler posição
 
