@@ -44,8 +44,8 @@ int main() {
             game_producer[strlen(game_producer) - 1] = '\0';
 
             // Registrar na estrutura game
-            key++;
             game = register_game(game_name, game_producer, game_year, key);
+            key++;
 
             // Registrar na lista catalogo
             list_insert(catalog, game);
@@ -73,7 +73,7 @@ int main() {
             int search_number = 0;
 
             // buscar games da produtora
-            for (int i = 1; i <= number_of_register; i++) {
+            for (int i = 0; i < number_of_register; i++) {
                 char *search = search_producer(sequential_search(catalog, i), producer);
                 if (search != FALSE) {
                     strcpy(found_games[search_number], search);
@@ -98,7 +98,7 @@ int main() {
             int search_number = 0;
 
             // buscar games deste ano
-            for (int i = 1; i <= number_of_register; i++) {
+            for (int i = 0; i < number_of_register; i++) {
                 char *search = search_year(sequential_search(catalog, i), year);
                 if (search != FALSE) {
                     strcpy(found_games[search_number], search);
@@ -114,7 +114,7 @@ int main() {
 
         } else if (select_command(command) == imprime) {
             // imprimir todos os jogos
-            for (int i = 1; i <= number_of_register; i++) {
+            for (int i = 0; i < number_of_register; i++) {
                 print_game_name(sequential_search(catalog, i));
             }
         } else if (select_command(command) == posicao) {
@@ -123,7 +123,7 @@ int main() {
             scanf("%d", &position);
 
             // buscar o jogo que está salvo na posição X
-            GAME *game = sequential_search(catalog, position + 1);
+            GAME *game = sequential_search(catalog, position);
 
             // imprimir jogo da posiçaõ
             print_game_name(game);
@@ -136,12 +136,12 @@ int main() {
             int moves;
             scanf("%d", &moves);
             // buscar posição no catalogo
-            
-            if (abs(moves - index) <= (key - index)) {
-                for (int i = 0; i < moves; i++) {
-                    GAME *game1 = sequential_search(catalog, index+1);
-                    GAME *game2 = sequential_search(catalog, index + 2);
 
+            if (index + moves < number_of_register) {
+                for (int i = 0; i < moves; i++) {
+                    GAME *game1 = sequential_search(catalog, index);
+                    GAME *game2 = sequential_search(catalog, index + 1);
+                    // executar movimentação
                     if (swap_games(game1, game2)) {
                         index++;
                     } else {
@@ -149,16 +149,33 @@ int main() {
                         break;
                     }
                 }
+            } else {
+                printf("Error, out of range");
             }
-            // executar movimentação
         } else if (select_command(command) == mover_esquerda) {
             // ler posição
-
+            int index;
+            scanf("%d", &index);
             // ler quantas casas mover
-
+            int moves;
+            scanf("%d", &moves);
             // buscar posição no catalogo
 
-            // executar movimentação
+            if (index - moves >= 0) {
+                for (int i = 0; i < moves; i++) {
+                    GAME *game1 = sequential_search(catalog, index);
+                    GAME *game2 = sequential_search(catalog, index - 1);
+                    // executar movimentação
+                    if (swap_games(game1, game2)) {
+                        index--;
+                    } else {
+                        printf("Error");
+                        break;
+                    }
+                }
+            } else {
+                printf("Error, out of range");
+            }
         } else if (select_command(command) == encerrar) {
             // liberar espaço
             // break
