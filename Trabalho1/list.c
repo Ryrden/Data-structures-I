@@ -12,7 +12,7 @@ struct node_st {
 };
 
 struct list {
-    NODE *sentinel;
+    NODE *head;
     NODE *end;
     int size;
 };
@@ -20,11 +20,11 @@ struct list {
 LIST *create_list() {
     LIST *list = (LIST *)malloc(sizeof(LIST));
     if (list != NULL) {
-        list->sentinel = (NODE *)malloc(sizeof(NODE));
-        list->sentinel->item = create_empty_item();
-        if (list->sentinel == NULL)
+        list->head = (NODE *)malloc(sizeof(NODE));
+        list->head->item = create_empty_item();
+        if (list->head == NULL)
             return NULL;
-        list->sentinel->next = NULL;
+        list->head->next = NULL;
         list->end = NULL;
         list->size = 0;
     }
@@ -37,14 +37,14 @@ int list_insert(LIST *list, GAME *item) {
         if (new_node != NULL) {
             new_node->item = item;
             if (list_empty(list)) {
-                list->sentinel->next = new_node;
-                new_node->previous = list->sentinel;
+                list->head->next = new_node;
+                new_node->previous = list->head;
             } else {
                 new_node->previous = list->end;
                 list->end->next = new_node;
             }
             list->end = new_node;
-            list->end->next = list->sentinel;
+            list->end->next = list->head;
             list->size++;
             return TRUE;
         }
@@ -54,7 +54,7 @@ int list_insert(LIST *list, GAME *item) {
 
 boolean list_empty(const LIST *list) {
     if (list != NULL) {
-        return list->sentinel->next == NULL;
+        return list->head->next == NULL;
     }
     return ERRO_LIST;
 }
@@ -70,14 +70,14 @@ boolean list_remove_item(LIST *list, int key) {
     if (list != NULL) {
         NODE *actual_node;
         NODE *previous_node = NULL;
-        actual_node = list->sentinel->next;
+        actual_node = list->head->next;
         while (actual_node != NULL && get_key(actual_node->item) != key) {
             previous_node = actual_node;
             actual_node = actual_node->next;
         }
         if (actual_node != NULL) {
-            if (actual_node == list->sentinel) {
-                list->sentinel = actual_node->next;
+            if (actual_node == list->head) {
+                list->head = actual_node->next;
                 actual_node->next = NULL;
             } else {
                 previous_node->next = actual_node->next;
@@ -93,20 +93,20 @@ boolean list_remove_item(LIST *list, int key) {
 }
 
 GAME *sequential_search(const LIST *list, int key) {
-    set_key(list->sentinel->item, key);
-    NODE *nodeAtual = list->sentinel;
+    set_key(list->head->item, key);
+    NODE *nodeAtual = list->head;
     do {
         nodeAtual = nodeAtual->next;
     } while (get_key(nodeAtual->item) != key);
-    return ((nodeAtual != list->sentinel) ? nodeAtual->item : NULL);
+    return ((nodeAtual != list->head) ? nodeAtual->item : NULL);
 }
 
 boolean list_erase(LIST **list) {
     if ((*list != NULL) && (!list_empty(*list))) {
-        while ((*list)->sentinel != NULL) {
+        while ((*list)->head != NULL) {
             NODE *temporaryNode;
-            temporaryNode = (*list)->sentinel;
-            (*list)->sentinel = (*list)->sentinel->next;
+            temporaryNode = (*list)->head;
+            (*list)->head = (*list)->head->next;
             free(temporaryNode->item);
             temporaryNode->item = NULL;
             temporaryNode->next = NULL;
