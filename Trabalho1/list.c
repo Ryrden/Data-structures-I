@@ -14,6 +14,7 @@ struct node_st {
 struct list {
     NODE *head;
     NODE *end;
+    NODE *tail;
     int size;
 };
 
