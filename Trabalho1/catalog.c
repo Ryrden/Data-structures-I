@@ -5,8 +5,9 @@
 #include <string.h>
 
 operation select_command(char *command) {
-
-    if (!strcmp(command, "p"))
+    if (!strcmp(command, "r"))
+        return remove_duplicados;
+    else if (!strcmp(command, "p"))
         return produtora;
     else if (!strcmp(command, "a"))
         return ano;
