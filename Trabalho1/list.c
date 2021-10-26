@@ -13,7 +13,6 @@ struct node_st {
 
 struct list {
     NODE *head;
-    NODE *end;
     NODE *tail;
     int size;
 };
@@ -26,7 +25,7 @@ LIST *create_list() {
         if (list->head == NULL)
             return NULL;
         list->head->next = NULL;
-        list->end = NULL;
+        list->tail = NULL;
         list->size = 0;
     }
     return list;
@@ -41,11 +40,11 @@ int list_insert(LIST *list, GAME *item) {
                 list->head->next = new_node;
                 new_node->previous = list->head;
             } else {
-                new_node->previous = list->end;
-                list->end->next = new_node;
+                new_node->previous = list->tail;
+                list->tail->next = new_node;
             }
-            list->end = new_node;
-            list->end->next = list->head;
+            list->tail = new_node;
+            list->tail->next = list->head;
             list->size++;
             return TRUE;
         }
@@ -70,10 +69,8 @@ int list_size(const LIST *list) {
 boolean list_remove_item(LIST *list, int key) {
     if (list != NULL) {
         NODE *actual_node;
-        NODE *previous_node = NULL;
         actual_node = list->head->next;
         while (actual_node != NULL && get_key(actual_node->item) != key) {
-            previous_node = actual_node;
             actual_node = actual_node->next;
         }
         if (actual_node != NULL) {
@@ -81,11 +78,11 @@ boolean list_remove_item(LIST *list, int key) {
                 list->head = actual_node->next;
                 actual_node->next = NULL;
             } else {
-                previous_node->next = actual_node->next;
+                actual_node->previous = actual_node->next;
                 actual_node->next = NULL;
             }
-            if (list->end == actual_node) {
-                list->end = previous_node;
+            if (actual_node == list->tail) {
+                list->tail = actual_node->previous;
             }
             return TRUE;
         }
@@ -104,15 +101,17 @@ GAME *sequential_search(const LIST *list, int key) {
 
 boolean list_erase(LIST **list) {
     if ((*list != NULL) && (!list_empty(*list))) {
-        while ((*list)->head != NULL) {
+        while ((*list)->size >= 0) {
             NODE *temporaryNode;
             temporaryNode = (*list)->head;
             (*list)->head = (*list)->head->next;
             free(temporaryNode->item);
             temporaryNode->item = NULL;
             temporaryNode->next = NULL;
+            temporaryNode->previous = NULL;
             free(temporaryNode);
             temporaryNode = NULL;
+            (*list)->size -= 1;
         }
         free(*list);
         *list = NULL;
