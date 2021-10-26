@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define INEXISTENT_KEY (-32000)
 
 /*INFORMAÇÕES:
     NOME: Ryan Souza Sá Teles
@@ -14,6 +15,12 @@
     Disciplina: Estrutura de Dados I
     Professor: Leonardo Tórtoro Pereira
 */
+
+void producers_found(LIST *catalog, char **found_games, char *producer, int *search_number);
+void years_found(LIST *catalog, char **found_games, int year, int *search_number);
+void print_catalog(LIST *catalog);
+void move_right(LIST *catalog, int index, int moves);
+void move_left(LIST *catalog, int index, int moves);
 
 int main() {
     LIST *catalog;
@@ -61,7 +68,32 @@ int main() {
         scanf(" %s", command);
         getchar();
 
-        if (select_command(command) == produtora) {
+        if (select_command(command) == remove_duplicados) {
+            int *duplicate_games = create_duplicate_games(number_of_register);
+
+            int records = list_size(catalog);
+
+            // percorre criados
+            for (int key = 0; key < records; key++) {
+
+                // salva game
+                GAME *duplicate_game = sequential_search(catalog, key);
+
+                // busca duplicados e salva a chave deles no vetor
+                duplicate_games = found_duplicates(catalog, duplicate_game, );
+
+                // exclui todos games do catalogo enquanto o vetor tem chaves
+                int index = 0;
+                while (duplicate_games[index] != INEXISTENT_KEY){
+                    int to_remove = duplicate_games[index];
+                    list_remover_item(catalog, to_remove);
+                    index++;
+                }
+                // altera tamanho do vetor criado
+                records -= index;
+            }
+
+        } else if (select_command(command) == produtora) {
             // ler produtora
             char producer[256];
             scanf(" %[^(\r|\n)]*c", producer);
@@ -145,11 +177,11 @@ int main() {
         } else if (select_command(command) == encerrar) {
             // liberar espaço
             list_erase(&catalog);
+            fclose(arq1);
             // break
             break;
         }
     }
-
     return EXIT_SUCCESS;
 }
 
@@ -175,7 +207,7 @@ void years_found(LIST *catalog, char **found_games, int year, int *search_number
     }
 }
 
-void print_catalog(list *catalog) {
+void print_catalog(LIST *catalog) {
     int records = list_size(catalog);
     for (int i = 0; i < records; i++) {
         print_game_name(sequential_search(catalog, i));
