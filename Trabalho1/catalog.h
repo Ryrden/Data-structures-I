@@ -3,7 +3,8 @@
 #include "util.h"
 
 typedef enum {
-    produtora = 1,
+    remove_duplicados = 1,
+    produtora,
     ano,
     imprime,
     posicao,
