@@ -21,12 +21,16 @@ void years_found(LIST *catalog, char **found_games, int year, int *search_number
 void print_catalog(LIST *catalog);
 void move_right(LIST *catalog, int index, int moves);
 void move_left(LIST *catalog, int index, int moves);
+int *create_duplicate_games(int registers);
+void found_duplicates(LIST *catalog, int *duplicate_games);
+void free_duplicate_games(int **duplicate_games);
+void move_keys_to_right(LIST *catalog, int key_to_move);
 
 int main() {
     LIST *catalog;
     FILE *arq1;
 
-    arq1 = fopen("CSV.csv", "r");
+    arq1 = fopen("3.csv", "r");
     if (arq1 == NULL) {
         perror("Erro ao abrir o arquivo");
         exit(EXIT_FAILURE);
@@ -65,33 +69,30 @@ int main() {
     int number_of_register = list_size(catalog);
     while (1) {
         char command[2];
-        scanf(" %s", command);
+        scanf("%s", command);
         getchar();
 
         if (select_command(command) == remove_duplicados) {
             int *duplicate_games = create_duplicate_games(number_of_register);
 
-            int records = list_size(catalog);
+            // busca duplicados e salva a chave deles no vetor
+            found_duplicates(catalog, duplicate_games);
 
-            // percorre criados
-            for (int key = 0; key < records; key++) {
-
-                // salva game
-                GAME *duplicate_game = sequential_search(catalog, key);
-
-                // busca duplicados e salva a chave deles no vetor
-                duplicate_games = found_duplicates(catalog, duplicate_game, );
-
-                // exclui todos games do catalogo enquanto o vetor tem chaves
-                int index = 0;
-                while (duplicate_games[index] != INEXISTENT_KEY){
-                    int to_remove = duplicate_games[index];
-                    list_remover_item(catalog, to_remove);
-                    index++;
-                }
-                // altera tamanho do vetor criado
-                records -= index;
+            // exclui todos games do catalogo enquanto o vetor tem chaves
+            int index = 0;
+            while (duplicate_games[index] != INEXISTENT_KEY) {
+                int key_to_remove = duplicate_games[index];
+                if (!list_remove_item(catalog, key_to_remove))
+                    perror("Error to remove item");
+                int key_to_move = key_to_remove;
+                move_keys_to_right(catalog, key_to_move);
+                index++;
             }
+            // altera tamanho do vetor criado
+            decrease_list_size(catalog, index);
+
+            // limpa vetor
+            free_duplicate_games(&duplicate_games);
 
         } else if (select_command(command) == produtora) {
             // ler produtora
@@ -239,5 +240,60 @@ void move_left(LIST *catalog, int index, int moves) {
             printf("Error");
             break;
         }
+    }
+}
+
+int *create_duplicate_games(int registers) {
+    int *duplicate_games;
+
+    duplicate_games = (int *)malloc(sizeof(int) * registers);
+
+    if (duplicate_games == NULL)
+        exit(EXIT_FAILURE);
+
+    for (int i = 0; i < registers; i++)
+        duplicate_games[i] = INEXISTENT_KEY;
+
+    return duplicate_games;
+}
+
+void found_duplicates(LIST *catalog, int *duplicate_games) {
+    int records = list_size(catalog);
+
+    int index = 0;
+
+    for (int i = 0; i < records; i++) {
+        GAME *duplicate_game = sequential_search(catalog, i);
+        for (int j = i + 1; j < records; j++) {
+            GAME *possible_duplicate_game = sequential_search(catalog, j);
+
+            if (compare_games(duplicate_game, possible_duplicate_game)) {
+                int key = get_key(possible_duplicate_game);
+                boolean can_add = TRUE;
+                for (int k = 0; k < records; k++) {
+                    if (duplicate_games[k] == key) {
+                        can_add = FALSE;
+                        break;
+                    }
+                }
+                if (can_add) {
+                    duplicate_games[index] = get_key(possible_duplicate_game);
+                    index++;
+                }
+            }
+        }
+    }
+}
+
+void free_duplicate_games(int **duplicate_games) {
+    free(*duplicate_games);
+}
+
+void move_keys_to_right(LIST *catalog, int key_to_move) {
+    int size_catalog = list_size(catalog);
+
+    for (int i = key_to_move + 1; i < size_catalog; i++) {
+        GAME *game = sequential_search(catalog, i);
+        decrease_key_value(game);
     }
 }
