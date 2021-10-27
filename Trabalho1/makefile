@@ -16,3 +16,6 @@ valgrind:
 
 clean:
 	@rm *.o
+
+zip:
+	@zip -r Trabalho1.zip *
