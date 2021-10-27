@@ -25,13 +25,14 @@ LIST *create_list() {
         if (list->head == NULL)
             return NULL;
         list->head->next = NULL;
+        list->head->previous = NULL;
         list->tail = NULL;
         list->size = 0;
     }
     return list;
 }
 
-int list_insert(LIST *list, GAME *item) {
+boolean list_insert(LIST *list, GAME *item) {
     if (list != NULL) {
         NODE *new_node = (NODE *)malloc(sizeof(NODE));
         if (new_node != NULL) {
@@ -45,11 +46,34 @@ int list_insert(LIST *list, GAME *item) {
             }
             list->tail = new_node;
             list->tail->next = list->head;
+            list->head->previous = new_node;
             list->size++;
             return TRUE;
         }
     }
     return ERRO_LIST;
+}
+
+boolean list_insert_start(LIST *list, GAME *item) {
+    if ((list != NULL)) {
+        NODE *new_node = (NODE *)malloc(sizeof(NODE));
+        if (new_node != NULL) {
+            new_node->item = item;
+            if (list_empty(list)) {
+                list->tail = new_node;
+                list->tail->next = list->head;
+                list->head->previous = list->tail;
+            } else {
+                list->head->next->previous = new_node;
+                new_node->next = list->head->next;
+            }
+            new_node->previous = list->head;
+            list->head->next = new_node;
+            list->size++;
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 boolean list_empty(const LIST *list) {
@@ -78,12 +102,15 @@ boolean list_remove_item(LIST *list, int key) {
                 list->head = actual_node->next;
                 actual_node->next = NULL;
             } else {
-                actual_node->previous = actual_node->next;
+                actual_node->previous->next = actual_node->next;
+                actual_node->next->previous = actual_node->previous;
                 actual_node->next = NULL;
             }
             if (actual_node == list->tail) {
                 list->tail = actual_node->previous;
             }
+            actual_node = NULL;
+            list->size--;
             return TRUE;
         }
     }
@@ -92,11 +119,11 @@ boolean list_remove_item(LIST *list, int key) {
 
 GAME *sequential_search(const LIST *list, int key) {
     set_key(list->head->item, key);
-    NODE *nodeAtual = list->head;
+    NODE *actual_node = list->head;
     do {
-        nodeAtual = nodeAtual->next;
-    } while (get_key(nodeAtual->item) != key);
-    return ((nodeAtual != list->head) ? nodeAtual->item : NULL);
+        actual_node = actual_node->next;
+    } while (get_key(actual_node->item) != key);
+    return ((actual_node != list->head) ? actual_node->item : NULL);
 }
 
 boolean list_erase(LIST **list) {
@@ -124,4 +151,38 @@ void decrease_list_size(LIST *list, int to_remove) {
     if (list != NULL) {
         list->size -= to_remove;
     }
+}
+
+GAME *previous_item(const LIST *list, int key) {
+    if (list != NULL) {
+        NODE *actual_node;
+        actual_node = list->head->next;
+        while (actual_node != NULL) {
+            if (get_key(actual_node->item) == key) {
+                if (actual_node->previous == list->head)
+                    return actual_node->previous->previous->item;
+                else
+                    return actual_node->previous->item;
+            }
+            actual_node = actual_node->next;
+        }
+    }
+    return NULL;
+}
+
+GAME *next_item(const LIST *list, int key) {
+    if (list != NULL) {
+        NODE *actual_node;
+        actual_node = list->head->next;
+        while (actual_node != NULL) {
+            if (get_key(actual_node->item) == key) {
+                if (actual_node->next == list->head)
+                    return actual_node->next->next->item;
+                else
+                    return actual_node->next->item;
+            }
+            actual_node = actual_node->next;
+        }
+    }
+    return NULL;
 }

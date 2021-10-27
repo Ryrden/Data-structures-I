@@ -7,8 +7,8 @@
 typedef struct list LIST;
 
 LIST *create_list();
-int list_insert(LIST *list, GAME *item);
-boolean list_inserir_posicao(LIST *list, int posicao, void *item);
+boolean  list_insert(LIST *list, GAME *item);
+boolean list_insert_start(LIST *list, GAME *item);
 boolean list_erase(LIST **list);
 boolean list_remove(LIST *list);
 boolean list_remove_item(LIST *list, int key);
@@ -18,5 +18,7 @@ boolean list_full(const LIST *list);
 GAME *sequential_search(const LIST *list, int key);
 void print_list(const LIST *list);
 void decrease_list_size(LIST *list, int to_remove);
+GAME *previous_item(const LIST *list, int key);
+GAME *next_item(const LIST *list, int key);
 
 #endif // LIST_H
