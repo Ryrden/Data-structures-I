@@ -45,8 +45,8 @@ void print_game_name(GAME *game) {
 
 boolean swap_games(GAME *game1, GAME *game2) {
 
-    if (game1 != NULL && game2 != NULL) {    
-        int temp_key = game1->key;  
+    if (game1 != NULL && game2 != NULL) {
+        int temp_key = game1->key;
         game1->key = game2->key;
         game2->key = temp_key;
 
@@ -75,4 +75,20 @@ int set_key(GAME *item, int key) {
         return TRUE;
     }
     return FALSE;
+}
+
+boolean compare_games(GAME *game1, GAME *game2) {
+    if (game1 != NULL && game2 != NULL)
+        if (!strcmp(game1->name, game2->name))
+            if (!strcmp(game1->producer, game2->producer))
+                if (game1->year == game2->year)
+                    return TRUE;
+
+    return FALSE;
+}
+
+void decrease_key_value(GAME *game) {
+    if (game != NULL) {
+        game->key -= 1;
+    }
 }
