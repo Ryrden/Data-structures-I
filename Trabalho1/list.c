@@ -119,3 +119,9 @@ boolean list_erase(LIST **list) {
     }
     return FALSE;
 }
+
+void decrease_list_size(LIST *list, int to_remove) {
+    if (list != NULL) {
+        list->size -= to_remove;
+    }
+}
