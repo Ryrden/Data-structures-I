@@ -23,6 +23,13 @@ GAME *register_game(char *name, char *producer, int year, int key) {
     return game;
 }
 
+GAME *create_game() {
+    GAME *game = (GAME *)malloc(sizeof(GAME));
+    if (game == NULL)
+        exit(EXIT_FAILURE);
+    return game;
+}
+
 char *search_producer(GAME *game, char *game_producer) {
     if (!strcmp(game->producer, game_producer)) {
         return game->name;
@@ -67,6 +74,21 @@ boolean swap_games(GAME *game1, GAME *game2) {
     return FALSE;
 }
 
+boolean copy_games(GAME *game1, GAME *game2) {
+    if (game1 != NULL && game2 != NULL) {
+        game1 = (GAME *)malloc(sizeof(GAME));
+        if (game1 == NULL)
+            exit(EXIT_FAILURE);
+
+        strcpy(game1->name, game2->name);
+        strcpy(game1->producer, game2->producer);
+        game1->year = game2->year;
+
+        return TRUE;
+    }
+    return FALSE;
+}
+
 int get_key(const GAME *game) {
     if (game != NULL)
         return game->key;
@@ -78,7 +100,9 @@ GAME *create_empty_item() {
     GAME *item;
 
     item = (GAME *)calloc(sizeof(GAME), 1);
-    return item;
+    if (item != NULL)
+        return item;
+    return NULL;
 }
 
 int set_key(GAME *item, int key) {

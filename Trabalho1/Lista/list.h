@@ -17,7 +17,6 @@ boolean list_empty(const LIST *list);
 boolean list_full(const LIST *list);
 GAME *sequential_search(const LIST *list, int key);
 void print_list(const LIST *list);
-void decrease_list_size(LIST *list, int to_remove);
 GAME *previous_item(const LIST *list, int key);
 GAME *next_item(const LIST *list, int key);
 
