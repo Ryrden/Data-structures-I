@@ -1,6 +1,6 @@
-#include "catalog.h"
-#include "game.h"
-#include "list.h"
+#include "Catalogo/catalog.h"
+#include "Game/game.h"
+#include "Lista/list.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +23,7 @@ void move_right(LIST *catalog, int index, int moves);
 void move_left(LIST *catalog, int index, int moves);
 int *create_duplicate_games(int registers);
 void found_duplicates(LIST *catalog, int *duplicate_games);
+void delete_repeated_games(LIST *catalog, int *duplicate_games, int registers);
 void free_duplicate_games(int **duplicate_games);
 void move_keys_to_right(LIST *catalog, int key_to_move);
 void ajust_duplicate_key_games(int *duplicate_games, int N, int key);
@@ -33,7 +34,7 @@ int main() {
     LIST *catalog;
     FILE *arq1;
 
-    arq1 = fopen("2.csv", "r");
+    arq1 = fopen("Testes/2.csv", "r");
     if (arq1 == NULL) {
         perror("Error to open Archive");
         exit(EXIT_FAILURE);
@@ -45,31 +46,27 @@ int main() {
     int key = 0;
     while (fgets(line, sizeof(line), arq1)) {
 
-        while (1) {
-            GAME *game;
-            char *game_name = strtok(line, ";");
-            // TRATAR ENTRADA - caracteres: ´╗┐
-            while (*game_name < 'A')
-                game_name++;
+        char *game_name = strtok(line, ";");
+        // TRATAR ENTRADA - caracteres: ´╗┐
+        while (*game_name < 'A')
+            game_name++;
 
-            int game_year = atoi(strtok(NULL, ";"));
+        int game_year = atoi(strtok(NULL, ";"));
 
-            char *game_producer = strtok(NULL, ";");
-            if (game_producer[strlen(game_producer) - 1] == '\n')
-                game_producer[strlen(game_producer) - 1] = '\0';
+        char *game_producer = strtok(NULL, ";");
+        // TRATAR ENTRADA - remover /n do final (caso houver)
+        if (game_producer[strlen(game_producer) - 1] == '\n')
+            game_producer[strlen(game_producer) - 1] = '\0';
 
-            // Registrar na estrutura game
-            game = register_game(game_name, game_producer, game_year, key);
-            key++;
+        // Registrar na estrutura game
+        GAME *game;
+        game = register_game(game_name, game_producer, game_year, key);
+        key++;
 
-            // Registrar na lista catalogo
-            list_insert(catalog, game);
-
-            break;
-        }
+        // Registrar na lista catalogo
+        list_insert(catalog, game);
     }
 
-    int size_search = 100;
     while (1) {
         char command[2];
         scanf("%s", command);
@@ -83,15 +80,7 @@ int main() {
             found_duplicates(catalog, duplicate_games);
 
             // exclui todos games do catalogo enquanto o vetor tem chaves
-            int index = 0;
-            while (duplicate_games[index] != INEXISTENT_KEY) {
-                int key = duplicate_games[index];
-                list_remove_item(catalog, key);
-                move_keys_to_right(catalog, key);
-                ajust_duplicate_key_games(duplicate_games, number_of_register, key);
-                index++;
-            }
-            // altera tamanho do vetor criado
+            delete_repeated_games(catalog, duplicate_games, number_of_register);
 
             // limpa vetor
             free_duplicate_games(&duplicate_games);
@@ -103,11 +92,12 @@ int main() {
             getchar();
 
             // Criar vetor de buscas
+            int size_search = list_size(catalog);
             char **found_games;
             found_games = create_found_games_catalog(size_search);
-            int search_number = 0;
 
             // buscar games da produtora
+            int search_number = 0;
             producers_found(catalog, found_games, producer, &search_number);
 
             // imprimir games da produtora
@@ -122,11 +112,12 @@ int main() {
             scanf("%d", &year);
 
             // Criar vetor de buscas
+            int size_search = list_size(catalog);
             char **found_games;
             found_games = create_found_games_catalog(size_search);
-            int search_number = 0;
 
             // buscar games deste ano
+            int search_number = 0;
             years_found(catalog, found_games, year, &search_number);
 
             // imprimir games da produtora
@@ -341,4 +332,15 @@ void set_game_as_last(LIST *catalog, GAME *game) {
     list_insert(catalog, game);
     list_remove_item(catalog, 0);
     set_key(game, catalog_size - 1);
+}
+
+void delete_repeated_games(LIST *catalog, int *duplicate_games, int registers) {
+    int index = 0;
+    while (duplicate_games[index] != INEXISTENT_KEY) {
+        int key = duplicate_games[index];
+        list_remove_item(catalog, key);
+        move_keys_to_right(catalog, key);
+        ajust_duplicate_key_games(duplicate_games, registers, key);
+        index++;
+    }
 }
