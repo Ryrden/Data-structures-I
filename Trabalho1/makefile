@@ -1,4 +1,4 @@
-UTIL=game.c catalog.c list.c
+UTIL=Game/game.c Catalogo/catalog.c Lista/list.c
 MAIN=main.c
 BINARY=main
 
