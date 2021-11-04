@@ -136,12 +136,16 @@ boolean list_erase(LIST **list) {
             NODE *temporaryNode;
             temporaryNode = (*list)->head;
             (*list)->head = (*list)->head->next;
-            free(temporaryNode->item);
-            temporaryNode->item = NULL;
             temporaryNode->next = NULL;
             temporaryNode->previous = NULL;
-            free(temporaryNode);
-            temporaryNode = NULL;
+            if (temporaryNode->item != NULL) {
+                free(temporaryNode->item);
+                temporaryNode->item = NULL;
+            }
+            if (temporaryNode != NULL) {
+                free(temporaryNode);
+                temporaryNode = NULL;
+            }
             (*list)->size -= 1;
         }
         free(*list);

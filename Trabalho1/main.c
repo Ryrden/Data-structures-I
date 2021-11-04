@@ -31,7 +31,7 @@ int main() {
     LIST *catalog;
     FILE *arq1;
 
-    arq1 = fopen("Testes/2.csv", "r");
+    arq1 = fopen("CSV.csv", "r");
     if (arq1 == NULL) {
         perror("Error to open Archive");
         exit(EXIT_FAILURE);
@@ -56,12 +56,13 @@ int main() {
             game_producer[strlen(game_producer) - 1] = '\0';
 
         // Registrar na estrutura game
-        GAME *game;
-        game = register_game(game_name, game_producer, game_year, key);
+        GAME *game = create_game();
+        register_game(game, game_name, game_producer, game_year, key);
         key++;
 
         // Registrar na lista catalogo
         list_insert(catalog, game);
+        //free_game(game);
     }
 
     while (1) {
@@ -171,7 +172,6 @@ int main() {
     }
     return EXIT_SUCCESS;
 }
-
 
 void producers_found(LIST *catalog, char **found_games, char *producer, int *search_number) {
     int records = list_size(catalog);

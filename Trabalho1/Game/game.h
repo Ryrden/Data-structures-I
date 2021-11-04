@@ -4,7 +4,7 @@
 
 typedef struct game_st GAME;
 
-GAME *register_game(char *name, char *producer, int year, int key);
+void register_game(GAME *game, char *name, char *producer, int year, int key);
 
 int get_key(const GAME *game);
 

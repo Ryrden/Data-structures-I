@@ -10,17 +10,13 @@ struct game_st {
     int key;
 };
 
-GAME *register_game(char *name, char *producer, int year, int key) {
-    GAME *game = (GAME *)malloc(sizeof(GAME));
-    if (game == NULL)
-        exit(EXIT_FAILURE);
-
-    strcpy(game->name, name);
-    strcpy(game->producer, producer);
-    game->year = year;
-    game->key = key;
-
-    return game;
+void register_game(GAME *game, char *name, char *producer, int year, int key) {
+    if (game != NULL) {
+        strcpy(game->name, name);
+        strcpy(game->producer, producer);
+        game->year = year;
+        game->key = key;
+    }
 }
 
 GAME *create_game() {
