@@ -48,3 +48,29 @@ void free_found_games_catalog(char **found_games, int size) {
         free(found_games[i]);
     free(found_games);
 }
+
+void free_duplicate_games(int **duplicate_games) {
+    free(*duplicate_games);
+}
+
+int *create_duplicate_games(int registers) {
+    int *duplicate_games;
+
+    duplicate_games = (int *)malloc(sizeof(int) * registers);
+
+    if (duplicate_games == NULL)
+        exit(EXIT_FAILURE);
+
+    for (int i = 0; i < registers; i++)
+        duplicate_games[i] = INEXISTENT_KEY;
+
+    return duplicate_games;
+}
+
+void ajust_duplicate_key_games(int *duplicate_games, int N, int key) {
+    for (int i = 0; i < N; i++) {
+        if (duplicate_games[i] > key) {
+            duplicate_games[i] -= 1;
+        }
+    }
+}

@@ -21,12 +21,9 @@ void years_found(LIST *catalog, char **found_games, int year, int *search_number
 void print_catalog(LIST *catalog);
 void move_right(LIST *catalog, int index, int moves);
 void move_left(LIST *catalog, int index, int moves);
-int *create_duplicate_games(int registers);
 void found_duplicates(LIST *catalog, int *duplicate_games);
 void delete_repeated_games(LIST *catalog, int *duplicate_games, int registers);
-void free_duplicate_games(int **duplicate_games);
 void move_keys_to_right(LIST *catalog, int key_to_move);
-void ajust_duplicate_key_games(int *duplicate_games, int N, int key);
 void set_game_as_first(LIST *catalog, GAME *game);
 void set_game_as_last(LIST *catalog, GAME *game);
 
@@ -34,7 +31,7 @@ int main() {
     LIST *catalog;
     FILE *arq1;
 
-    arq1 = fopen("CSV.csv", "r");
+    arq1 = fopen("Testes/2.csv", "r");
     if (arq1 == NULL) {
         perror("Error to open Archive");
         exit(EXIT_FAILURE);
@@ -175,6 +172,7 @@ int main() {
     return EXIT_SUCCESS;
 }
 
+
 void producers_found(LIST *catalog, char **found_games, char *producer, int *search_number) {
     int records = list_size(catalog);
     for (int i = 0; i < records; i++) {
@@ -244,20 +242,6 @@ void move_left(LIST *catalog, int index, int moves) {
     }
 }
 
-int *create_duplicate_games(int registers) {
-    int *duplicate_games;
-
-    duplicate_games = (int *)malloc(sizeof(int) * registers);
-
-    if (duplicate_games == NULL)
-        exit(EXIT_FAILURE);
-
-    for (int i = 0; i < registers; i++)
-        duplicate_games[i] = INEXISTENT_KEY;
-
-    return duplicate_games;
-}
-
 void found_duplicates(LIST *catalog, int *duplicate_games) {
     int records = list_size(catalog);
 
@@ -286,24 +270,12 @@ void found_duplicates(LIST *catalog, int *duplicate_games) {
     }
 }
 
-void free_duplicate_games(int **duplicate_games) {
-    free(*duplicate_games);
-}
-
 void move_keys_to_right(LIST *catalog, int key_to_move) {
     int size_catalog = list_size(catalog);
 
     for (int i = key_to_move + 1; i <= size_catalog; i++) {
         GAME *game = sequential_search(catalog, i);
         set_key(game, i - 1);
-    }
-}
-
-void ajust_duplicate_key_games(int *duplicate_games, int N, int key) {
-    for (int i = 0; i < N; i++) {
-        if (duplicate_games[i] > key) {
-            duplicate_games[i] -= 1;
-        }
     }
 }
 
