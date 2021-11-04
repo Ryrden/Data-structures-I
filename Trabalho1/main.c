@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define INEXISTENT_KEY (-32000)
 
 /*INFORMAÇÕES:
     NOME: Ryan Souza Sá Teles
@@ -166,7 +165,6 @@ int main() {
             // liberar espaço
             list_erase(&catalog);
             fclose(arq1);
-            // break
             break;
         }
     }

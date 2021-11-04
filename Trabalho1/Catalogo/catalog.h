@@ -23,7 +23,9 @@ void print_found_games(char **found_games, int number_of_searches);
 void free_found_games_catalog(char **found_games, int size);
 
 int *create_duplicate_games(int registers);
+
 void ajust_duplicate_key_games(int *duplicate_games, int N, int key);
+
 void free_duplicate_games(int **duplicate_games);
 
 #endif // CATALOG_H
