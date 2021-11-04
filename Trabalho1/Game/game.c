@@ -122,9 +122,3 @@ boolean compare_games(GAME *game1, GAME *game2) {
 
     return FALSE;
 }
-
-void decrease_key_value(GAME *game) {
-    if (game != NULL) {
-        game->key -= 1;
-    }
-}

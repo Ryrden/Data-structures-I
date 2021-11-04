@@ -26,6 +26,4 @@ void print_game_name(GAME *game);
 
 int set_key(GAME *item, int key);
 
-void decrease_key_value(GAME *game);
-
 #endif // JOGO_H
