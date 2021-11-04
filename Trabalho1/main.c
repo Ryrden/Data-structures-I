@@ -34,7 +34,7 @@ int main() {
     LIST *catalog;
     FILE *arq1;
 
-    arq1 = fopen("Testes/2.csv", "r");
+    arq1 = fopen("CSV.csv", "r");
     if (arq1 == NULL) {
         perror("Error to open Archive");
         exit(EXIT_FAILURE);
@@ -70,7 +70,6 @@ int main() {
     while (1) {
         char command[2];
         scanf("%s", command);
-        getchar();
 
         int number_of_register = list_size(catalog);
         if (select_command(command) == remove_duplicados) {
@@ -88,8 +87,9 @@ int main() {
         } else if (select_command(command) == produtora) {
             // ler produtora
             char producer[256];
-            scanf(" %[^(\r|\n)]*c", producer);
             getchar();
+            fgets(producer, 256, stdin);
+            producer[strlen(producer) - 1] = '\0';
 
             // Criar vetor de buscas
             int size_search = list_size(catalog);
@@ -127,9 +127,6 @@ int main() {
             free_found_games_catalog(found_games, size_search);
 
         } else if (select_command(command) == imprime) {
-            // limpar buffer da tela
-            setbuf(stdout, 0);
-
             // imprimir todos os jogos
             print_catalog(catalog);
         } else if (select_command(command) == posicao) {
@@ -183,7 +180,7 @@ void producers_found(LIST *catalog, char **found_games, char *producer, int *sea
     for (int i = 0; i < records; i++) {
         char *search = search_producer(sequential_search(catalog, i), producer);
         if (search != FALSE) {
-            strcpy(found_games[*search_number], search);
+            strncpy(found_games[*search_number], search, strlen(search));
             *search_number += 1;
         }
     }
