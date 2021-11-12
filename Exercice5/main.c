@@ -16,7 +16,7 @@
 int main() {
 
     // Criar Arvore
-    TREE *tree;
+    BINARY_TREE *tree;
     tree = create_tree();
 
     // Pegar entrada
@@ -55,11 +55,11 @@ int main() {
         if (compare_CPF(CPF, CPF_root)) {
             // Se maior -> Direita
             // Inserir na Arvore
-            /* insert_tree(tree, , RIGHT, CPF); */
+            
         } else {
             // Se menor -> Esquerda
             // Inserir na Arvore
-            /* insert_tree(tree, , LEFT, CPF); */
+            
         }
     }
 
@@ -73,7 +73,7 @@ int main() {
     pos_order_tree(tree);
 
     // Deletar Arvore
-    erase_tree(&tree);
+    erase_tree(tree);
 
     return EXIT_SUCCESS;
 }

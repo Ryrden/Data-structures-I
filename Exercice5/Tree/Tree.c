@@ -1,28 +1,29 @@
 #include "Tree.h"
 #include <stdlib.h>
-#include "../Bank/Bank.h"
 
 typedef struct node_st NODE;
 
 struct node_st {
-    void *item;
+    BANK *item;
     NODE *right;
     NODE *left;
 };
 
-struct tree_st {
+struct binary_tree_st {
     NODE *root;
     int depth;
 };
 
-static void recursion_pre_order(NODE *root);
-static void recursion_in_order(NODE *root);
-static void recursion_pos_order(NODE *root);
-static void erase_tree_nodes(NODE **root)
+void recursion_pre_order(NODE *root);
+void recursion_in_order(NODE *root);
+void recursion_pos_order(NODE *root);
+void erase_tree_nodes(NODE *root);
+NODE *create_tree_node(BANK *item);
+NODE *insert_tree_node(NODE *root, BANK *item, int side, int key);
 
-TREE *create_tree() {
-    TREE *tree;
-    tree = (TREE *)malloc(sizeof(TREE));
+BINARY_TREE *create_tree() {
+    BINARY_TREE *tree;
+    tree = (BINARY_TREE *)malloc(sizeof(BINARY_TREE));
     if (tree != NULL) {
         tree->root = NULL;
         tree->depth = -1;
@@ -31,7 +32,7 @@ TREE *create_tree() {
     return NULL;
 }
 
-NODE *create_tree_node(void *item) {
+NODE *create_tree_node(BANK *item) {
     if (item != NULL) {
         NODE *new_item;
         new_item = (NODE *)malloc(sizeof(NODE));
@@ -45,30 +46,30 @@ NODE *create_tree_node(void *item) {
     return NULL;
 }
 
-void pre_order_tree(TREE *tree) {
+void pre_order_tree(BINARY_TREE *tree) {
     recursion_pre_order(tree->root);
 }
 
-void in_order_tree(TREE *tree) {
+void in_order_tree(BINARY_TREE *tree) {
     recursion_in_order(tree->root);
 }
 
-void pos_order_tree(TREE *tree) {
+void pos_order_tree(BINARY_TREE *tree) {
     recursion_pos_order(tree->root);
 }
 
-boolean insert_tree(TREE *tree, void *item, int side, int key) {
+boolean insert_tree(BINARY_TREE *tree, BANK *item, int side, int key) {
     if (tree->root == NULL)
         return ((tree->root = create_tree_node(item)) != NULL);
     else
-        return ((tree->root = insert_tree_node(tree, item, side, key)));
+        return ((tree->root = insert_tree_node(tree->root, item, side, key)) != NULL);
 }
 
-NODE insert_tree_node(NODE *root, void *item, int side, int key) {
+NODE *insert_tree_node(NODE *root, BANK *item, int side, int key) {
     if (root != NULL) {
         root->left = insert_tree_node(root->left, item, side, key);
         root->right = insert_tree_node(root->right, item, side, key);
-        if (key == get_key(item)) {
+        if (key == get_key(root->item)) {
             if (side == LEFT && root->left == NULL)
                 root->left = create_tree_node(item);
             else if (side == RIGHT && root->right == NULL)
@@ -78,24 +79,23 @@ NODE insert_tree_node(NODE *root, void *item, int side, int key) {
     return root;
 }
 
-boolean erase_tree(TREE **tree) {
-    if (*tree != NULL) {
-        erase_tree_nodes(&tree->root);
+boolean erase_tree(BINARY_TREE *tree) {
+    if (tree != NULL) {
+        erase_tree_nodes(tree->root);
         return TRUE;
     }
-    return FALSE
+    return FALSE;
 }
 
-
-static void erase_tree_nodes(NODE **root) {
+void erase_tree_nodes(NODE *root) {
     if (root != NULL) {
-        erase_tree_nodes(&root->left);
-        erase_tree_nodes(&root->right);
-        free(&root);
+        erase_tree_nodes(root->left);
+        erase_tree_nodes(root->right);
+        free(root);
     }
 }
 
-static void recursion_pre_order(NODE *root) {
+void recursion_pre_order(NODE *root) {
     if (root != NULL) {
         print_item(root->item);
         recursion_pre_order(root->left);
@@ -103,18 +103,18 @@ static void recursion_pre_order(NODE *root) {
     }
 }
 
-static void recursion_in_order(NODE *root) {
+void recursion_in_order(NODE *root) {
     if (root != NULL) {
-        print_item(root->item);
         recursion_in_order(root->left);
+        print_item(root->item);
         recursion_in_order(root->right);
     }
 }
 
-static void recursion_pos_order(NODE *root) {
+void recursion_pos_order(NODE *root) {
     if (root != NULL) {
-        print_item(root->item);
         recursion_pos_order(root->left);
         recursion_pos_order(root->right);
+        print_item(root->item);
     }
 }
