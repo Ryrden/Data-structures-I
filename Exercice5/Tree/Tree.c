@@ -17,7 +17,7 @@ struct binary_tree_st {
 static void recursion_pre_order(NODE *root);
 static void recursion_in_order(NODE *root);
 static void recursion_pos_order(NODE *root);
-static void erase_tree_nodes(NODE *root);
+static void erase_tree_nodes(NODE **root);
 static NODE *create_tree_node(BANK *item);
 static NODE *insert_tree_node(NODE *root, BANK *item);
 static boolean isBigger(BANK *item, NODE *root);
@@ -48,9 +48,11 @@ static NODE *create_tree_node(BANK *item) {
     return NULL;
 }
 
-boolean erase_tree(BINARY_TREE *tree) {
+boolean erase_tree(BINARY_TREE **tree) {
     if (tree != NULL) {
-        erase_tree_nodes(tree->root);
+        erase_tree_nodes(&(*tree)->root);
+        free(*tree);
+        tree = NULL;
         return TRUE;
     }
     return FALSE;
@@ -89,11 +91,14 @@ static boolean isSmaller(BANK *item, NODE *root) {
     return get_key(item) < get_key(root->item);
 }
 
-static void erase_tree_nodes(NODE *root) {
-    if (root != NULL) {
-        erase_tree_nodes(root->left);
-        erase_tree_nodes(root->right);
-        free(root);
+static void erase_tree_nodes(NODE **root) {
+    if (*root != NULL) {
+        erase_tree_nodes(&(*root)->left);
+        erase_tree_nodes(&(*root)->right);
+        free((*root)->item);
+        (*root)->item = NULL;
+        free(*root);
+        root = NULL;
     }
 }
 

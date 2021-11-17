@@ -10,7 +10,7 @@ typedef struct binary_tree_st BINARY_TREE;
 typedef unsigned long long int integer;
 
 BINARY_TREE *create_tree();
-boolean erase_tree(BINARY_TREE *tree);
+boolean erase_tree(BINARY_TREE **tree);
 void pre_order_tree(BINARY_TREE *tree);
 void in_order_tree(BINARY_TREE *tree);
 void pos_order_tree(BINARY_TREE *tree);
