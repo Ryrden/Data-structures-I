@@ -5,9 +5,9 @@
 typedef struct bank_st BANK;
 
 BANK create_bank_item(char *name, int CPF, int age, int balance);
-int get_cpf_numbers(char *CPF);
+char *get_cpf_numbers(char *CPF);
 int get_key(BANK *bank);
 void print_item(BANK *bank);
-boolean compare_CPF(int CPF_1, int CPF_2);
+boolean compare_CPF(char *CPF_1, char *CPF_2);
 
 #endif //BANK_H
