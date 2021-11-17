@@ -1,5 +1,4 @@
 #include "Bank.h"
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,6 +20,7 @@ BANK *create_bank_client(char *name, integer CPF, int age, double balance) {
 
     return person;
 }
+
 integer get_cpf_numbers(char *CPF_string) {
     char *cpf_numbers = (char *)malloc(sizeof(char) * 11);
     for (int i = 0, j = 0; i < 15; i++) {
@@ -30,21 +30,30 @@ integer get_cpf_numbers(char *CPF_string) {
         }
     }
     char *remaining;
-    integer CPF = strtoull(cpf_numbers,&remaining,10);
+    integer CPF = strtoull(cpf_numbers, &remaining, 10);
     return CPF;
 }
 
 integer get_key(BANK *client) {
     if (client != NULL)
         return client->CPF;
+    return ERROR;
 }
 void print_item(BANK *client) {
-    return;
+    printf("%llu\n", client->CPF);
 }
 
 boolean compare_CPF(integer CPF_1, integer CPF_2) {
     if (CPF_1 > CPF_2)
         return TRUE;
 
+    return FALSE;
+}
+
+boolean erase_client(BANK **client) {
+    if (client != NULL) {
+        free(*client);
+        return TRUE;
+    }
     return FALSE;
 }

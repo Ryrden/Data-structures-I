@@ -20,6 +20,8 @@ static void recursion_pos_order(NODE *root);
 static void erase_tree_nodes(NODE *root);
 static NODE *create_tree_node(BANK *item);
 static NODE *insert_tree_node(NODE *root, BANK *item);
+static boolean isBigger(BANK *item, NODE *root);
+static boolean isSmaller(BANK *item, NODE *root);
 
 BINARY_TREE *create_tree() {
     BINARY_TREE *tree;
@@ -46,6 +48,14 @@ static NODE *create_tree_node(BANK *item) {
     return NULL;
 }
 
+boolean erase_tree(BINARY_TREE *tree) {
+    if (tree != NULL) {
+        erase_tree_nodes(tree->root);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void pre_order_tree(BINARY_TREE *tree) {
     recursion_pre_order(tree->root);
 }
@@ -65,19 +75,18 @@ boolean insert_tree(BINARY_TREE *tree, BANK *item) {
 static NODE *insert_tree_node(NODE *root, BANK *item) {
     if (root == NULL)
         root = create_tree_node(item);
-    else if (get_key(item) > get_key(root->item))
+    else if (isBigger(item, root))
         root->right = insert_tree_node(root->right, item);
-    else if (get_key(item) < get_key(root->item))
+    else if (isSmaller(item, root))
         root->left = insert_tree_node(root->left, item);
     return root;
 }
 
-boolean erase_tree(BINARY_TREE *tree) {
-    if (tree != NULL) {
-        erase_tree_nodes(tree->root);
-        return TRUE;
-    }
-    return FALSE;
+static boolean isBigger(BANK *item, NODE *root) {
+    return get_key(item) > get_key(root->item);
+}
+static boolean isSmaller(BANK *item, NODE *root) {
+    return get_key(item) < get_key(root->item);
 }
 
 static void erase_tree_nodes(NODE *root) {
