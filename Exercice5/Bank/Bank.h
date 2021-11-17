@@ -2,12 +2,13 @@
 #define BANK_H
 #include "../Util/util.h"
 
+typedef unsigned long long int integer;
 typedef struct bank_st BANK;
 
-BANK *create_bank_client(char *name, char *CPF, int age, double balance) ;
-char *get_cpf_numbers(char *CPF);
-int get_key(BANK *bank);
-void print_item(BANK *bank);
-boolean compare_CPF(char *CPF_1, char *CPF_2);
+BANK *create_bank_client(char *name, integer CPF, int age, double balance);
+integer get_cpf_numbers(char *CPF);
+integer get_key(BANK *client);
+void print_item(BANK *client);
+boolean compare_CPF(integer CPF_1, integer CPF_2);
 
 #endif //BANK_H
