@@ -12,6 +12,7 @@
     Disciplina: Estrutura de Dados I
     Professor: Leonardo Tórtoro Pereira
 */
+char *readString();
 
 int main() {
 
@@ -23,44 +24,45 @@ int main() {
     int n;
     scanf("%d", &n);
 
-    char line[256];
-    int CPF_root;
+    char CPF_root[11];
     for (int i = 0; i < n; i++) {
-        // Pegar Linha
-        fgets(line, 256, stdin);
-        line[strlen(line) - 1] = '\0';
-
         // Pegar CPF
-        char *CPF_string = strtok(line, ";");
+
+        getchar();
+        char *CPF_string = readString();
         // tratar entrada - retirar "." e "-"
-        int CPF = get_cpf_numbers(CPF_string);
+        char *CPF = get_cpf_numbers(CPF_string);
+        free(CPF_string);
 
         // define raiz
         if (i == 0)
-            CPF_root = CPF;
+            strcpy(CPF_root, CPF);
 
         // Pegar Nome
-        char *name = strtok(NULL, ";");
-        name[strlen(line) - 1] = '\0';
+        char *name = readString();
 
         // Pegar Idade
-        int age = atoi(strtok(NULL, ";"));
+        int age;
+        scanf("%d", &age);
 
         // Pegar Saldo
-        int balance = atoi(strtok(NULL, "\n"));
+        getchar();
+        double balance;
+        scanf("%lf", &balance);
 
         // Criar cadastro no banco
-        printf("%d %s %d %d", CPF, name, age, balance);
+        printf("\n%s %s %d %.2f\n", CPF, name, age, balance);
         // Comparar CPF
         if (compare_CPF(CPF, CPF_root)) {
             // Se maior -> Direita
             // Inserir na Arvore
-            
+
         } else {
             // Se menor -> Esquerda
             // Inserir na Arvore
-            
         }
+        free(CPF);
+        free(name);
     }
 
     // Imprimir In-Order
@@ -76,4 +78,19 @@ int main() {
     erase_tree(tree);
 
     return EXIT_SUCCESS;
+}
+
+char *readString() {
+    char c;
+    char *string = (char *)malloc(sizeof(char) * 256);
+    int index = 0;
+    while (scanf("%c", &c) != EOF) {
+        if (c == ';') {
+            string[index] = '\0';
+            break;
+        }
+        string[index] = c;
+        index++;
+    }
+    return string;
 }
