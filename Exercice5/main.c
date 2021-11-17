@@ -52,12 +52,12 @@ int main() {
 
         // insere na arvore
         insert_tree(tree, client);
-
+        
         free(name);
     }
     output(tree);
     // Deletar Arvore
-    erase_tree(tree);
+    erase_tree(&tree);
 
     return EXIT_SUCCESS;
 }
