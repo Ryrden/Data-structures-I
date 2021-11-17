@@ -2,19 +2,26 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct bank_st {
     char name[256];
-    unsigned int CPF;
+    char CPF[11];
     unsigned int age;
-    long long int balance;
+    double balance;
 };
 
-BANK create_bank_item(char *name, int CPF, int age, int balance) {
-    BANK bank;
-    bank.age = 15;
+static int charToInt(char c);
 
-    return bank;
+BANK *create_bank_client(char *name, char *CPF, int age, double balance) {
+    BANK *person = (BANK *)malloc(sizeof(BANK));
+
+    strcpy(person->name, name);
+    strcpy(person->CPF, CPF);
+    person->age = age;
+    person->balance = balance;
+
+    return person;
 }
 char *get_cpf_numbers(char *CPF_string) {
     char *cpf_numbers = (char *)malloc(sizeof(char) * 11);
@@ -25,33 +32,35 @@ char *get_cpf_numbers(char *CPF_string) {
             j++;
         }
     }
-
     return cpf_numbers;
 }
-int get_key(BANK *bank) {
-    return 1;
+
+char *get_key(BANK *client) {
+    if (client != NULL)
+        return client->CPF;
+    return NULL;
 }
 void print_item(BANK *bank) {
     return;
 }
 
-static int charToInt(char c){
-	int num = 0;
-	num = c - '0';
-	return num;
-}
-
 boolean compare_CPF(char *CPF_1, char *CPF_2) {
 
-    while (*CPF_1 == *CPF_2){
+    while (*CPF_1 == *CPF_2) {
         CPF_1++;
         CPF_2++;
     }
     int MSD_1 = charToInt(CPF_1[0]);
     int MSD_2 = charToInt(CPF_2[0]);
-    
+
     if (MSD_1 > MSD_2)
         return TRUE;
 
     return FALSE;
+}
+
+static int charToInt(char c) {
+    int num = 0;
+    num = c - '0';
+    return num;
 }

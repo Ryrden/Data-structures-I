@@ -4,7 +4,7 @@
 
 typedef struct bank_st BANK;
 
-BANK create_bank_item(char *name, int CPF, int age, int balance);
+BANK *create_bank_client(char *name, char *CPF, int age, double balance) ;
 char *get_cpf_numbers(char *CPF);
 int get_key(BANK *bank);
 void print_item(BANK *bank);
