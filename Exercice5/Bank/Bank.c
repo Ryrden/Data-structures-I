@@ -10,28 +10,20 @@ struct bank_st {
     double balance;
 };
 
+static void pass_cpf_numbers(char *CPF_numbers, char *CPF_string);
+
 BANK *create_bank_client(char *name, integer CPF, int age, double balance) {
-    BANK *person = (BANK *)malloc(sizeof(BANK));
+    if (CPF > 0) {
+        BANK *client = (BANK *)malloc(sizeof(BANK));
 
-    strcpy(person->name, name);
-    person->CPF = CPF;
-    person->age = age;
-    person->balance = balance;
-
-    return person;
-}
-
-integer get_cpf_numbers(char *CPF_string) {
-    char cpf_numbers[11];
-    for (int i = 0, j = 0; i < 15; i++) {
-        if (CPF_string[i] != '-' && CPF_string[i] != '.') {
-            cpf_numbers[j] = CPF_string[i];
-            j++;
-        }
+        strcpy(client->name, name);
+        client->CPF = CPF;
+        client->age = age;
+        client->balance = balance;
+        return client;
     }
-    char *remaining;
-    integer CPF = strtoull(cpf_numbers, &remaining, 10);
-    return CPF;
+    printf("\nCPF already registered\n");
+    return NULL;
 }
 
 integer get_key(BANK *client) {
@@ -39,23 +31,27 @@ integer get_key(BANK *client) {
         return client->CPF;
     return ERROR;
 }
+
 void print_item(BANK *client) {
     printf("%llu\n", client->CPF);
 }
 
-boolean compare_CPF(integer CPF_1, integer CPF_2) {
-    if (CPF_1 > CPF_2)
-        return TRUE;
-
-    return FALSE;
+integer get_cpf_numbers(char *CPF_string) {
+    if (CPF_string != NULL) {
+        char CPF_numbers[11];
+        pass_cpf_numbers(CPF_numbers,CPF_string);
+        char *remaining;
+        integer CPF = strtoull(CPF_numbers, &remaining, 10);
+        return CPF;
+    }
+    printf("\nNULL CPF\n");
+    return ERROR;
 }
 
-boolean erase_client(BANK **client) {
-    if (client != NULL) {
-        (*client)->CPF = ERRO;
-        free(*client);
-        client = NULL;
-        return TRUE;
-    }
-    return FALSE;
+static void pass_cpf_numbers(char *CPF_numbers, char *CPF_string) {
+    for (int i = 0, j = 0; i < 15; i++) 
+        if (CPF_string[i] != '-' && CPF_string[i] != '.') {
+            CPF_numbers[j] = CPF_string[i];
+            j++;
+        } 
 }

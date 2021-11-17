@@ -81,6 +81,8 @@ static NODE *insert_tree_node(NODE *root, void *item) {
         root->right = insert_tree_node(root->right, item);
     else if (isSmaller(item, root))
         root->left = insert_tree_node(root->left, item);
+    else
+        return NULL;
     return root;
 }
 

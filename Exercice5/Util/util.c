@@ -28,3 +28,18 @@ char *readLine() {
     string[index - 1] = '\0';
     return string;
 }
+
+char *readStringUntilReach(char caractere) {
+    char c;
+    char *string = (char *)malloc(sizeof(char) * 256);
+    int index = 0;
+    while (scanf("%c", &c) != EOF) {
+        if (c == caractere) {
+            string[index] = '\0';
+            break;
+        }
+        string[index] = c;
+        index++;
+    }
+    return string;
+}
