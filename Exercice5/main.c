@@ -25,14 +25,15 @@ int main() {
     int n = 0;
     scanf("%d", &n);
 
-    char *CPF_root;
+    integer CPF_root;
+    integer Rlast_CPF, Llast_CPF;
     for (int i = 0; i < n; i++) {
 
         // Pegar CPF
         getchar();
         char *CPF_string = readString();
         // entrada tratada- retirar "." e "-"
-        char *CPF = get_cpf_numbers(CPF_string);
+        integer CPF = get_cpf_numbers(CPF_string);
         free(CPF_string);
 
         // Pegar Nome
@@ -49,23 +50,10 @@ int main() {
 
         // Criar cadastro no banco
         BANK *client = create_bank_client(name, CPF, age, balance);
-        // define raiz
-        if (i == 0) {
-            CPF_root = define_cpf_root(CPF);
-            // insere na arvore
-            insert_tree(tree,client,RIGHT,CPF_root);
-            continue;
-        }
-        // Comparar CPF
-        if (compare_CPF(CPF, CPF_root)) {
-            // Se maior -> Direita
-            // Inserir na Arvore
-            // insert_tree(tree, client, RIGHT, atol(CPF));
-        } else {
-            // Se menor -> Esquerda
-            // Inserir na Arvore
-        }
-        free(CPF);
+            
+        // insere na arvore
+        insert_tree(tree, client);
+    
         free(name);
     }
 
