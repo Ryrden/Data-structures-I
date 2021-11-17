@@ -13,6 +13,7 @@
     Professor: Leonardo Tórtoro Pereira
 */
 char *readString();
+char *define_cpf_root(char *temp_CPF);
 
 int main() {
 
@@ -21,22 +22,18 @@ int main() {
     tree = create_tree();
 
     // Pegar entrada
-    int n;
+    int n = 0;
     scanf("%d", &n);
 
-    char CPF_root[11];
+    char *CPF_root;
     for (int i = 0; i < n; i++) {
-        // Pegar CPF
 
+        // Pegar CPF
         getchar();
         char *CPF_string = readString();
-        // tratar entrada - retirar "." e "-"
+        // entrada tratada- retirar "." e "-"
         char *CPF = get_cpf_numbers(CPF_string);
         free(CPF_string);
-
-        // define raiz
-        if (i == 0)
-            strcpy(CPF_root, CPF);
 
         // Pegar Nome
         char *name = readString();
@@ -51,12 +48,19 @@ int main() {
         scanf("%lf", &balance);
 
         // Criar cadastro no banco
-        printf("\n%s %s %d %.2f\n", CPF, name, age, balance);
+        BANK *client = create_bank_client(name, CPF, age, balance);
+        // define raiz
+        if (i == 0) {
+            CPF_root = define_cpf_root(CPF);
+            // insere na arvore
+            insert_tree(tree,client,RIGHT,CPF_root);
+            continue;
+        }
         // Comparar CPF
         if (compare_CPF(CPF, CPF_root)) {
             // Se maior -> Direita
             // Inserir na Arvore
-
+            // insert_tree(tree, client, RIGHT, atol(CPF));
         } else {
             // Se menor -> Esquerda
             // Inserir na Arvore
@@ -93,4 +97,13 @@ char *readString() {
         index++;
     }
     return string;
+}
+
+char *define_cpf_root(char *temp_CPF) {
+    // OBSERVAÇÃO PARA O CORRETOR (pode desconsiderar essa mensagem, sei que não avalia a forma q fiz o código mesmo):
+    // Fiz tudo isso porque quando eu faço apenas strcpy no código, a variavel n volta pra 0
+    // e se tento converter a string para long int ou long long int, por alguma razão o número simplesmente não CONVERTE!!! (odeio C)
+    char *CPF = (char *)malloc(sizeof(char) * 11);
+    strcpy(CPF, temp_CPF);
+    return CPF;
 }
