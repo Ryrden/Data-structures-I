@@ -14,6 +14,6 @@ boolean erase_tree(BINARY_TREE **tree);
 void pre_order_tree(BINARY_TREE *tree);
 void in_order_tree(BINARY_TREE *tree);
 void pos_order_tree(BINARY_TREE *tree);
-boolean insert_tree(BINARY_TREE *tree, BANK *item) ;
+boolean insert_tree(BINARY_TREE *tree, void *item) ;
 
 #endif // TREE_H

@@ -4,7 +4,7 @@
 typedef struct node_st NODE;
 
 struct node_st {
-    BANK *item;
+    void *item;
     NODE *right;
     NODE *left;
 };
@@ -18,10 +18,10 @@ static void recursion_pre_order(NODE *root);
 static void recursion_in_order(NODE *root);
 static void recursion_pos_order(NODE *root);
 static void erase_tree_nodes(NODE **root);
-static NODE *create_tree_node(BANK *item);
-static NODE *insert_tree_node(NODE *root, BANK *item);
-static boolean isBigger(BANK *item, NODE *root);
-static boolean isSmaller(BANK *item, NODE *root);
+static NODE *create_tree_node(void *item);
+static NODE *insert_tree_node(NODE *root, void *item);
+static boolean isBigger(void *item, NODE *root);
+static boolean isSmaller(void *item, NODE *root);
 
 BINARY_TREE *create_tree() {
     BINARY_TREE *tree;
@@ -34,7 +34,7 @@ BINARY_TREE *create_tree() {
     return NULL;
 }
 
-static NODE *create_tree_node(BANK *item) {
+static NODE *create_tree_node(void *item) {
     if (item != NULL) {
         NODE *new_item;
         new_item = (NODE *)malloc(sizeof(NODE));
@@ -70,11 +70,11 @@ void pos_order_tree(BINARY_TREE *tree) {
     recursion_pos_order(tree->root);
 }
 
-boolean insert_tree(BINARY_TREE *tree, BANK *item) {
+boolean insert_tree(BINARY_TREE *tree, void *item) {
     return ((tree->root = insert_tree_node(tree->root, item)) != NULL);
 }
 
-static NODE *insert_tree_node(NODE *root, BANK *item) {
+static NODE *insert_tree_node(NODE *root, void *item) {
     if (root == NULL)
         root = create_tree_node(item);
     else if (isBigger(item, root))
@@ -84,10 +84,10 @@ static NODE *insert_tree_node(NODE *root, BANK *item) {
     return root;
 }
 
-static boolean isBigger(BANK *item, NODE *root) {
+static boolean isBigger(void *item, NODE *root) {
     return get_key(item) > get_key(root->item);
 }
-static boolean isSmaller(BANK *item, NODE *root) {
+static boolean isSmaller(void *item, NODE *root) {
     return get_key(item) < get_key(root->item);
 }
 
