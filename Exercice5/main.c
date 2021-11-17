@@ -60,4 +60,5 @@ void output(BINARY_TREE *tree) {
 
     printf("\nPostorder\n");
     pos_order_tree(tree);
+    printf("\n"); //RunCodes pediu
 }
