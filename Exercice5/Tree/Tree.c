@@ -19,7 +19,7 @@ static void recursion_in_order(NODE *root);
 static void recursion_pos_order(NODE *root);
 static void erase_tree_nodes(NODE *root);
 static NODE *create_tree_node(BANK *item);
-static NODE *insert_tree_node(NODE *root, BANK *item, int side, char *key);
+static NODE *insert_tree_node(NODE *root, BANK *item);
 
 BINARY_TREE *create_tree() {
     BINARY_TREE *tree;
@@ -58,24 +58,17 @@ void pos_order_tree(BINARY_TREE *tree) {
     recursion_pos_order(tree->root);
 }
 
-boolean insert_tree(BINARY_TREE *tree, BANK *item, int side, char *key) {
-    if (tree->root == NULL)
-        return ((tree->root = create_tree_node(item)) != NULL);
-    else
-        return ((tree->root = insert_tree_node(tree->root, item, side, key)) != NULL);
+boolean insert_tree(BINARY_TREE *tree, BANK *item) {
+    return ((tree->root = insert_tree_node(tree->root, item)) != NULL);
 }
 
-static NODE *insert_tree_node(NODE *root, BANK *item, int side, char *key) {
-    if (root != NULL) {
-        root->left = insert_tree_node(root->left, item, side, key);
-        root->right = insert_tree_node(root->right, item, side, key);
-        if (key == get_key(root->item)) {
-            if (side == LEFT && root->left == NULL)
-                root->left = create_tree_node(item);
-            else if (side == RIGHT && root->right == NULL)
-                root->right = create_tree_node(item);
-        }
-    }
+static NODE *insert_tree_node(NODE *root, BANK *item) {
+    if (root == NULL)
+        root = create_tree_node(item);
+    else if (get_key(item) > get_key(root->item))
+        root->right = insert_tree_node(root->right, item);
+    else if (get_key(item) < get_key(root->item))
+        root->left = insert_tree_node(root->left, item);
     return root;
 }
 
