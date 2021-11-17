@@ -22,7 +22,7 @@ BANK *create_bank_client(char *name, integer CPF, int age, double balance) {
 }
 
 integer get_cpf_numbers(char *CPF_string) {
-    char *cpf_numbers = (char *)malloc(sizeof(char) * 11);
+    char cpf_numbers[11];
     for (int i = 0, j = 0; i < 15; i++) {
         if (CPF_string[i] != '-' && CPF_string[i] != '.') {
             cpf_numbers[j] = CPF_string[i];
@@ -52,7 +52,9 @@ boolean compare_CPF(integer CPF_1, integer CPF_2) {
 
 boolean erase_client(BANK **client) {
     if (client != NULL) {
+        (*client)->CPF = ERRO;
         free(*client);
+        client = NULL;
         return TRUE;
     }
     return FALSE;
