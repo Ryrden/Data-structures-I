@@ -11,7 +11,12 @@
     Disciplina: Estrutura de Dados I
     Professor: Leonardo Tórtoro Pereira
 */
+
 void output(BINARY_TREE *tree);
+CPF read_CPF();
+NAME read_name();
+AGE read_age();
+BALANCE read_balance();
 
 int main() {
 
@@ -22,33 +27,25 @@ int main() {
     scanf("%d", &n);
 
     for (int i = 0; i < n; i++) {
-
         getchar();
-        char *CPF_string = readStringUntilReach(';');
-        // entrada tratada- retirar "." e "-"
-        integer CPF = get_cpf_numbers(CPF_string);
-        free(CPF_string);
-
-        char *name = readStringUntilReach(';');
-
-        int age;
-        scanf("%d", &age);
-
+        CPF cpf = read_CPF();
+        NAME name = read_name();
+        AGE age = read_age();
         getchar();
-        double balance;
-        scanf("%lf", &balance);
+        BALANCE balance = read_balance();
 
-        BANK *client = create_bank_client(name, CPF, age, balance);
+        BANK *client = create_bank_client(name, cpf, age, balance);
 
         insert_tree(tree, client);
-
+        
         free(name);
     }
 
     output(tree);
-    if (erase_tree(&tree))
-        return EXIT_SUCCESS;
-    return EXIT_FAILURE;
+
+    return erase_tree(&tree)
+        ? EXIT_SUCCESS
+        : EXIT_FAILURE;
 }
 
 void output(BINARY_TREE *tree) {
@@ -60,5 +57,29 @@ void output(BINARY_TREE *tree) {
 
     printf("\nPostorder\n");
     pos_order_tree(tree);
-    printf("\n"); //RunCodes pediu
+    printf("\n"); // RunCodes pediu
+}
+
+CPF read_CPF() {
+    char *cpf_string = readStringUntilReach(';');
+    // entrada tratada- retirar "." e "-"
+    CPF cpf = get_cpf_numbers(cpf_string);
+    free(cpf_string);
+    return cpf;
+}
+
+NAME read_name() {
+    return readStringUntilReach(';');
+}
+
+AGE read_age() {
+    AGE age;
+    scanf("%d", &age);
+    return age;
+}
+
+BALANCE read_balance() {
+    BALANCE balance;
+    scanf("%lf", &balance);
+    return balance;
 }

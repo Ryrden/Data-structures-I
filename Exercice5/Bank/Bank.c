@@ -3,55 +3,61 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Observação, não coloquei os typdefs aqui por questão de que a struct deve abrigar tipos de dados,
+desta forma, fica claro quais são. Acredito que não envolva legibilidade aqui (Se sim, me de um feedback por favor). */
 struct bank_st {
     char name[256];
-    integer CPF;
+    unsigned long long int cpf;
     unsigned int age;
     double balance;
 };
 
-static void pass_cpf_numbers(char *CPF_numbers, char *CPF_string);
+static void pass_cpf_numbers(char *cpf_numbers, char *cpf_string);
+static void pass_data_to_client(BANK *client, NAME name, CPF cpf, AGE age, BALANCE balance);
 
-BANK *create_bank_client(char *name, integer CPF, int age, double balance) {
-    if (CPF > 0) {
+BANK *create_bank_client(NAME name, CPF cpf, AGE age, BALANCE balance) {
+    if (cpf > 0 ) { //Verificação símbolica
         BANK *client = (BANK *)malloc(sizeof(BANK));
-
-        strcpy(client->name, name);
-        client->CPF = CPF;
-        client->age = age;
-        client->balance = balance;
+        pass_data_to_client(client, name, cpf, age, balance);
         return client;
     }
-    printf("\nCPF already registered\n");
+    printf("\nINVALID CPF\n");
     return NULL;
 }
 
-integer get_key(BANK *client) {
+static void pass_data_to_client(BANK *client, NAME name, CPF cpf, AGE age, BALANCE balance) {
+    strcpy(client->name, name);
+    client->cpf = cpf;
+    client->age = age;
+    client->balance = balance;
+}
+
+CPF get_key(BANK *client) {
     if (client != NULL)
-        return client->CPF;
+        return client->cpf;
     return ERROR;
 }
 
 void print_item(BANK *client) {
-    printf("%llu\n", client->CPF);
+    printf("%llu\n", client->cpf);
 }
 
-integer get_cpf_numbers(char *CPF_string) {
-    if (CPF_string != NULL) {
-        char CPF_numbers[11];
-        pass_cpf_numbers(CPF_numbers,CPF_string);
+CPF get_cpf_numbers(char *cpf_string) {
+    if (cpf_string != NULL) {
+        char cpf_numbers[11];
+        pass_cpf_numbers(cpf_numbers, cpf_string);
         char *remaining;
-        integer CPF = strtoull(CPF_numbers, &remaining, 10);
-        return CPF;
+        CPF cpf = strtoull(cpf_numbers, &remaining, 10);
+        return cpf;
     }
     printf("\nNULL CPF\n");
     return ERROR;
 }
 
-static void pass_cpf_numbers(char *CPF_numbers, char *CPF_string) {
-    for (int i = 0, j = 0; i < 15; i++) 
-        if (CPF_string[i] != '-' && CPF_string[i] != '.') {
-            CPF_numbers[j] = CPF_string[i];
+static void pass_cpf_numbers(char *cpf_numbers, char *cpf_string) {
+    for (int i = 0, j = 0; i < 15; i++)
+        if (cpf_string[i] != '-' && cpf_string[i] != '.') {
+            cpf_numbers[j] = cpf_string[i];
             j++;
-        } 
+        }
 }
