@@ -1,4 +1,4 @@
-UTIL=
+UTIL= Bank/Bank.c Tree/Tree.c Util/util.c
 MAIN=main.c
 BINARY=main
 
