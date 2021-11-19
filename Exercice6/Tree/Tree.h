@@ -8,6 +8,7 @@ typedef struct binary_tree_st BINARY_TREE;
 BINARY_TREE *create_tree();
 boolean insert_tree(BINARY_TREE *tree, void *item) ;
 boolean erase_tree(BINARY_TREE **tree);
+BANK *binary_tree_search(BINARY_TREE *tree, CPF key);
 void pre_order_tree(BINARY_TREE *tree);
 void in_order_tree(BINARY_TREE *tree);
 void pos_order_tree(BINARY_TREE *tree);

@@ -22,6 +22,7 @@ static NODE *create_tree_node(void *item);
 static NODE *insert_tree_node(NODE *root, void *item);
 static boolean isBigger(void *item, NODE *root);
 static boolean isSmaller(void *item, NODE *root);
+static BANK *search_node(NODE *root, CPF key);
 
 BINARY_TREE *create_tree() {
     BINARY_TREE *tree;
@@ -58,18 +59,6 @@ boolean erase_tree(BINARY_TREE **tree) {
     return FALSE;
 }
 
-void pre_order_tree(BINARY_TREE *tree) {
-    recursion_pre_order(tree->root);
-}
-
-void in_order_tree(BINARY_TREE *tree) {
-    recursion_in_order(tree->root);
-}
-
-void pos_order_tree(BINARY_TREE *tree) {
-    recursion_pos_order(tree->root);
-}
-
 boolean insert_tree(BINARY_TREE *tree, void *item) {
     return ((tree->root = insert_tree_node(tree->root, item)) != NULL);
 }
@@ -102,12 +91,20 @@ static void erase_tree_nodes(NODE **root) {
     }
 }
 
+void pre_order_tree(BINARY_TREE *tree) {
+    recursion_pre_order(tree->root);
+}
+
 static void recursion_pre_order(NODE *root) {
     if (root != NULL) {
         print_item(root->item);
         recursion_pre_order(root->left);
         recursion_pre_order(root->right);
     }
+}
+
+void in_order_tree(BINARY_TREE *tree) {
+    recursion_in_order(tree->root);
 }
 
 static void recursion_in_order(NODE *root) {
@@ -118,10 +115,29 @@ static void recursion_in_order(NODE *root) {
     }
 }
 
+void pos_order_tree(BINARY_TREE *tree) {
+    recursion_pos_order(tree->root);
+}
+
 static void recursion_pos_order(NODE *root) {
     if (root != NULL) {
         recursion_pos_order(root->left);
         recursion_pos_order(root->right);
         print_item(root->item);
     }
+}
+
+BANK *binary_tree_search(BINARY_TREE *tree, CPF key) {
+    return (search_node(tree->root, key));
+}
+
+static BANK *search_node(NODE *root, CPF key) {
+    if (root == NULL)
+        return NULL;
+    if (key == get_key(root->item))
+        return (root->item);
+    if (key < get_key(root->item))
+        return (search_node(root->left, key));
+    else
+        return search_node(root->right, key);
 }
