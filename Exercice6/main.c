@@ -26,24 +26,29 @@ int main() {
     int n = 0;
     scanf("%d", &n);
 
+    CPF cpf;
+    NAME name;
+    AGE age;
+    BALANCE balance;
     for (int i = 0; i < n; i++) {
-        getchar();
-        CPF cpf = read_CPF();
-        NAME name = read_name();
-        AGE age = read_age();
-        getchar();
-        BALANCE balance = read_balance();
 
-        BANK *client = create_bank_client(name, cpf, age, balance);
+        get_client_data(&cpf, name, &age, &balance);
+
+        BANK *client = create_bank_client(cpf,name, age, balance);
         insert_tree(tree, client);
         free(name);
     }
-    char command[10];
+
+    char command[2];
     scanf("%s", command);
 
     if (select_command(command) == insercao) {
         // Inserção
-        
+        get_client_data(&cpf, name, &age, &balance);
+        BANK *client = create_bank_client(cpf,name, age, balance);
+        insert_tree(tree, client);
+        free(name);
+
     } else if (select_command(command) == remocao) {
         // Remocação
 
@@ -57,6 +62,15 @@ int main() {
     return erase_tree(&tree)
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
+}
+
+void get_client_data(CPF *cpf, NAME name, AGE *age, BALANCE *balance) {
+    getchar();
+    CPF cpf = read_CPF();
+    NAME name = read_name();
+    AGE age = read_age();
+    getchar();
+    BALANCE balance = read_balance();
 }
 
 CPF read_CPF() {
