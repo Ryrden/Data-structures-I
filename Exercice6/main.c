@@ -2,7 +2,8 @@
 #include "Tree/Tree.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#define NOT_ONLY_CPF FALSE
+#define ONLY_CPF TRUE
 /*INFORMAÇÕES:
     NOME: Ryan Souza Sá Teles
     nUSP: 12822062
@@ -13,7 +14,7 @@
 */
 
 void output(BINARY_TREE *tree);
-CPF read_CPF();
+CPF read_CPF(boolean only_cpf);
 NAME read_name();
 AGE read_age();
 BALANCE read_balance();
@@ -34,7 +35,7 @@ int main() {
 
         get_client_data(&cpf, name, &age, &balance);
 
-        BANK *client = create_bank_client(cpf,name, age, balance);
+        BANK *client = create_bank_client(cpf, name, age, balance);
         insert_tree(tree, client);
         free(name);
     }
@@ -45,15 +46,22 @@ int main() {
     if (select_command(command) == insercao) {
         // Inserção
         get_client_data(&cpf, name, &age, &balance);
-        BANK *client = create_bank_client(cpf,name, age, balance);
+        BANK *client = create_bank_client(cpf, name, age, balance);
         insert_tree(tree, client);
         free(name);
 
     } else if (select_command(command) == remocao) {
         // Remocação
+        
 
     } else if (select_command(command) == busca) {
         // Busca
+        CPF cpf = read_CPF(ONLY_CPF);
+        BANK *client = search_tree(tree, cpf);
+        if (client != NULL)
+            print_client(client);
+        else
+            printf("Pessoa nao encontrada.\n");
 
     } else {
         printf("\n\nCommand not found");
@@ -66,15 +74,20 @@ int main() {
 
 void get_client_data(CPF *cpf, NAME name, AGE *age, BALANCE *balance) {
     getchar();
-    CPF cpf = read_CPF();
+    CPF cpf = read_CPF(NOT_ONLY_CPF);
     NAME name = read_name();
     AGE age = read_age();
     getchar();
     BALANCE balance = read_balance();
 }
 
-CPF read_CPF() {
-    char *cpf_string = readStringUntilReach(';');
+CPF read_CPF(boolean only_cpf) {
+    char *cpf_string;
+    if (only_cpf)
+        scanf("%s", cpf_string);
+    else
+        cpf_string = readStringUntilReach(';');
+
     // entrada tratada- retirar "." e "-"
     CPF cpf = get_cpf_numbers(cpf_string);
     free(cpf_string);
