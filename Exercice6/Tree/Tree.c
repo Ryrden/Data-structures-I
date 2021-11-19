@@ -22,6 +22,8 @@ static NODE *create_tree_node(void *item);
 static NODE *insert_tree_node(NODE *root, void *item);
 static boolean isBigger(void *item, NODE *root);
 static boolean isSmaller(void *item, NODE *root);
+static boolean least_one_child(NODE *root);
+static boolean has_both_childs(NODE *root);
 static BANK *search_node(NODE *root, TYPE_KEY key);
 
 BINARY_TREE *create_tree() {
