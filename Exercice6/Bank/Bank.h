@@ -16,7 +16,7 @@ typedef enum {
 } operation;
 
 operation select_command(char *command);
-BANK *create_bank_client(NAME name, CPF cpf, AGE age, BALANCE balance);
+BANK *create_bank_client(CPF cpf,NAME name,  AGE age, BALANCE balance);
 CPF get_cpf_numbers(char *CPF);
 CPF get_key(BANK *client);
 NAME get_name(BANK *client);

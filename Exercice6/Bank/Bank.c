@@ -15,7 +15,7 @@ struct bank_st {
 static void pass_cpf_numbers(char *cpf_numbers, char *cpf_string);
 static void pass_data_to_client(BANK *client, NAME name, CPF cpf, AGE age, BALANCE balance);
 
-BANK *create_bank_client(NAME name, CPF cpf, AGE age, BALANCE balance) {
+BANK *create_bank_client(CPF cpf,NAME name,  AGE age, BALANCE balance) {
     if (cpf > 0) { // Verificação símbolica
         BANK *client = (BANK *)malloc(sizeof(BANK));
         pass_data_to_client(client, name, cpf, age, balance);
@@ -89,11 +89,11 @@ static void pass_cpf_numbers(char *cpf_numbers, char *cpf_string) {
 
 operation select_command(char *command) {
 
-    if (!strcmp(command, "insercao"))
+    if (!strcmp(command, "I"))
         return insercao;
-    else if (!strcmp(command, "remocao"))
+    else if (!strcmp(command, "R"))
         return remocao;
-    else if (!strcmp(command, "busca"))
+    else if (!strcmp(command, "B"))
         return busca;
 
     return ERROR;
