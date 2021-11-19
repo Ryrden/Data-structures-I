@@ -52,7 +52,14 @@ int main() {
 
     } else if (select_command(command) == remocao) {
         // Remocação
-        
+        CPF cpf = read_CPF(ONLY_CPF);
+        BANK *client = search_tree(tree, cpf);
+        if (remove_tree(tree, cpf)) {
+            print_client(client);
+            pre_order_tree(tree);
+        } else {
+            printf("Error to remove client")
+        }
 
     } else if (select_command(command) == busca) {
         // Busca
