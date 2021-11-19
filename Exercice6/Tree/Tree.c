@@ -22,7 +22,7 @@ static NODE *create_tree_node(void *item);
 static NODE *insert_tree_node(NODE *root, void *item);
 static boolean isBigger(void *item, NODE *root);
 static boolean isSmaller(void *item, NODE *root);
-static BANK *search_node(NODE *root, CPF key);
+static BANK *search_node(NODE *root, TYPE_KEY key);
 
 BINARY_TREE *create_tree() {
     BINARY_TREE *tree;
@@ -127,11 +127,11 @@ static void recursion_pos_order(NODE *root) {
     }
 }
 
-BANK *binary_tree_search(BINARY_TREE *tree, CPF key) {
+BANK *search_tree(BINARY_TREE *tree, TYPE_KEY key) {
     return (search_node(tree->root, key));
 }
 
-static BANK *search_node(NODE *root, CPF key) {
+static BANK *search_node(NODE *root, TYPE_KEY key) {
     if (root == NULL)
         return NULL;
     if (key == get_key(root->item))
@@ -140,4 +140,60 @@ static BANK *search_node(NODE *root, CPF key) {
         return (search_node(root->left, key));
     else
         return search_node(root->right, key);
+}
+
+boolean remove_tree(BINARY_TREE *tree, TYPE_KEY key) {
+    if (tree != NULL)
+        return remove_node(&tree->root, key);
+    return FALSE;
+}
+
+static boolean least_one_child(NODE *root) {
+    return (*root)->left == NULL || (*root)->right == NULL;
+}
+
+static boolean has_both_childs(NODE *root) {
+    return (*root)->left != NULL && (*root)->right != NULL;
+}
+
+static boolean remove_node(NODE **root, TYPE_KEY key) {
+    NODE *removed_node;
+    if (*root == NULL)
+        return FALSE;
+
+    if (key == item_get_key((*root)->item)) {
+        if (least_one_child(root)) {
+            removed_node = *root;
+            if ((*root)->left == NULL)
+                *root = (*root)->right;
+            else
+                *root = (*root)->left;
+
+            free(removed_node);
+            removed_node = NULL;
+        } else if (has_both_childs(root))
+            swap_min_right((*root)->right, (*root), (*root));
+
+        return TRUE;
+    } else {
+        if (key < item_get_key((*root)->item))
+            return remove_node(&(*root)->left, key);
+        else
+            return remove_node(&(*root)->right, key);
+    }
+}
+
+static void swap_min_right(NODE *swap, NODE *root, NODE *previous_node) {
+    if (swap->left != NULL) {
+        swap_min_right(swap->left, root, swap);
+        return;
+    }
+    if (root == previous_node)
+        previous_node->left = swap->left;
+    else
+        previous_node->right = swap->left;
+
+    root->item = swap->item;
+    free(swap);
+    swap = NULL;
 }
