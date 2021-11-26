@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #define NOT_ONLY_CPF FALSE
 #define ONLY_CPF TRUE
+
 /*INFORMAÇÕES:
     NOME: Ryan Souza Sá Teles
     nUSP: 12822062
@@ -13,11 +14,14 @@
     Professor: Leonardo Tórtoro Pereira
 */
 
-void output(BINARY_TREE *tree);
 CPF read_CPF(boolean only_cpf);
 NAME read_name();
 AGE read_age();
 BALANCE read_balance();
+BANK *get_client_data();
+void insertion_option(BINARY_TREE *tree);
+void remove_option(BINARY_TREE *tree);
+void search_option(BINARY_TREE *tree);
 
 int main() {
 
@@ -27,77 +31,81 @@ int main() {
     int n = 0;
     scanf("%d", &n);
 
-    CPF cpf;
-    NAME name;
-    AGE age;
-    BALANCE balance;
     for (int i = 0; i < n; i++) {
-
-        get_client_data(&cpf, name, &age, &balance);
-
-        BANK *client = create_bank_client(cpf, name, age, balance);
+        BANK *client = get_client_data();
         insert_tree(tree, client);
-        free(name);
     }
 
     char command[2];
     scanf("%s", command);
 
-    if (select_command(command) == insercao) {
-        // Inserção
-        get_client_data(&cpf, name, &age, &balance);
-        BANK *client = create_bank_client(cpf, name, age, balance);
-        insert_tree(tree, client);
-        free(name);
-
-    } else if (select_command(command) == remocao) {
-        // Remocação
-        CPF cpf = read_CPF(ONLY_CPF);
-        BANK *client = search_tree(tree, cpf);
-        if (remove_tree(tree, cpf)) {
-            print_client(client);
-            pre_order_tree(tree);
-        } else {
-            printf("Error to remove client")
-        }
-
-    } else if (select_command(command) == busca) {
-        // Busca
-        CPF cpf = read_CPF(ONLY_CPF);
-        BANK *client = search_tree(tree, cpf);
-        if (client != NULL)
-            print_client(client);
-        else
-            printf("Pessoa nao encontrada.\n");
-
-    } else {
+    if (select_command(command) == insercao)
+        insertion_option(tree);
+    else if (select_command(command) == remocao)
+        remove_option(tree);
+    else if (select_command(command) == busca)
+        search_option(tree);
+    else
         printf("\n\nCommand not found");
-    }
 
+    printf("\n"); // RunCodes Pediu
     return erase_tree(&tree)
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
 }
 
-void get_client_data(CPF *cpf, NAME name, AGE *age, BALANCE *balance) {
+void insertion_option(BINARY_TREE *tree) {
+    BANK *client = get_client_data();
+    insert_tree(tree, client);
+    printf("Preorder\n");
+    pre_order_tree(tree);
+}
+
+void remove_option(BINARY_TREE *tree) {
+    CPF cpf = read_CPF(ONLY_CPF);
+    BANK *client = search_tree(tree, cpf);
+    if (remove_tree(tree, cpf)) {
+        print_client(client);
+        printf("Preorder\n");
+        pre_order_tree(tree);
+    } else {
+        printf("Error to remove client");
+    }
+}
+
+void search_option(BINARY_TREE *tree) {
+    CPF cpf = read_CPF(ONLY_CPF);
+    BANK *client = search_tree(tree, cpf);
+    if (client != NULL)
+        print_client(client);
+    else
+        printf("Pessoa nao encontrada.\n"); //404
+}
+
+BANK *get_client_data() {
     getchar();
     CPF cpf = read_CPF(NOT_ONLY_CPF);
     NAME name = read_name();
     AGE age = read_age();
     getchar();
     BALANCE balance = read_balance();
+    BANK *client = create_bank_client(cpf, name, age, balance);
+    free(name);
+    return client;
 }
 
 CPF read_CPF(boolean only_cpf) {
-    char *cpf_string;
-    if (only_cpf)
+    CPF cpf;
+    if (only_cpf == ONLY_CPF) {
+        char cpf_string[15];
         scanf("%s", cpf_string);
-    else
+        cpf = get_cpf_numbers(cpf_string);
+    } else if (only_cpf == NOT_ONLY_CPF) {
+        char *cpf_string;
         cpf_string = readStringUntilReach(';');
-
-    // entrada tratada- retirar "." e "-"
-    CPF cpf = get_cpf_numbers(cpf_string);
-    free(cpf_string);
+        cpf = get_cpf_numbers(cpf_string);
+        free(cpf_string);
+    }
     return cpf;
 }
 
