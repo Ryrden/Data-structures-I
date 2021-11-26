@@ -75,6 +75,30 @@ static char *get_formated_cpf(BANK *client) {
     return formated_cpf;
 }
 
+char *format_cpf_numbers(CPF cpf) {
+    char temp_cpf_string[11];
+    sprintf(temp_cpf_string, "%llu", cpf);
+
+    char *cpf_string = (char *)malloc(sizeof(char) * 15);
+    put_dot_and_dash(cpf_string, temp_cpf_string);
+    return cpf_string;
+}
+
+static void put_dot_and_dash(char *cpf_string, char *temp_cpf_string) {
+    for (int index = 0, i = 0; index < 11; i++, index++) {
+        if (i == 3 || i == 7) {
+            cpf_string[i] = '.';
+            index--;
+        } else if (i == 11) {
+            cpf_string[i] = '-';
+            index--;
+        } else {
+            cpf_string[i] = temp_cpf_string[index];
+        }
+    }
+    cpf_string[14] = '\0';
+}
+
 void print_item(BANK *client) {
     printf("%llu\n", client->cpf);
 }
@@ -99,29 +123,7 @@ static void pass_cpf_numbers(char *cpf_numbers, char *cpf_string) {
         }
 }
 
-char *format_cpf_numbers(CPF cpf) {
-    char temp_cpf_string[11];
-    sprintf(temp_cpf_string, "%llu", cpf);
 
-    char *cpf_string = (char *)malloc(sizeof(char) * 15);
-    put_dot_and_dash(cpf_string, temp_cpf_string);
-    return cpf_string;
-}
-
-static void put_dot_and_dash(char *cpf_string, char *temp_cpf_string) {
-    for (int index = 0, i = 0; index < 11; i++, index++) {
-        if (i == 3 || i == 7) {
-            cpf_string[i] = '.';
-            index--;
-        } else if (i == 11) {
-            cpf_string[i] = '-';
-            index--;
-        } else {
-            cpf_string[i] = temp_cpf_string[index];
-        }
-    }
-    cpf_string[14] = '\0';
-}
 
 operation select_command(char *command) {
 
