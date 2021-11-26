@@ -22,9 +22,12 @@ static NODE *create_tree_node(void *item);
 static NODE *insert_tree_node(NODE *root, void *item);
 static boolean isBigger(void *item, NODE *root);
 static boolean isSmaller(void *item, NODE *root);
-static boolean least_one_child(NODE *root);
-static boolean has_both_childs(NODE *root);
+static boolean least_one_child(NODE **root);
+static boolean has_both_childs(NODE **root);
 static BANK *search_node(NODE *root, TYPE_KEY key);
+
+static void swap_min_right(NODE *swap, NODE *root, NODE *previous_node);
+static boolean remove_node(NODE **root, TYPE_KEY key);
 
 BINARY_TREE *create_tree() {
     BINARY_TREE *tree;
@@ -150,11 +153,11 @@ boolean remove_tree(BINARY_TREE *tree, TYPE_KEY key) {
     return FALSE;
 }
 
-static boolean least_one_child(NODE *root) {
+static boolean least_one_child(NODE **root) {
     return (*root)->left == NULL || (*root)->right == NULL;
 }
 
-static boolean has_both_childs(NODE *root) {
+static boolean has_both_childs(NODE **root) {
     return (*root)->left != NULL && (*root)->right != NULL;
 }
 
@@ -163,8 +166,8 @@ static boolean remove_node(NODE **root, TYPE_KEY key) {
     if (*root == NULL)
         return FALSE;
 
-    if (key == item_get_key((*root)->item)) {
-        if (least_one_child(root)) {
+    if (key == get_key((*root)->item)) {
+        if (least_one_child(&(*root))) {
             removed_node = *root;
             if ((*root)->left == NULL)
                 *root = (*root)->right;
@@ -173,12 +176,12 @@ static boolean remove_node(NODE **root, TYPE_KEY key) {
 
             free(removed_node);
             removed_node = NULL;
-        } else if (has_both_childs(root))
+        } else if (has_both_childs(&(*root)))
             swap_min_right((*root)->right, (*root), (*root));
 
         return TRUE;
     } else {
-        if (key < item_get_key((*root)->item))
+        if (key < get_key((*root)->item))
             return remove_node(&(*root)->left, key);
         else
             return remove_node(&(*root)->right, key);
@@ -191,9 +194,9 @@ static void swap_min_right(NODE *swap, NODE *root, NODE *previous_node) {
         return;
     }
     if (root == previous_node)
-        previous_node->left = swap->left;
-    else
         previous_node->right = swap->left;
+    else
+        previous_node->left = swap->left;
 
     root->item = swap->item;
     free(swap);
