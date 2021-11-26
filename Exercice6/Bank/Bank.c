@@ -12,8 +12,10 @@ struct bank_st {
     double balance;
 };
 
-static void pass_cpf_numbers(char *cpf_numbers, char *cpf_string);
 static void pass_data_to_client(BANK *client, NAME name, CPF cpf, AGE age, BALANCE balance);
+static void pass_cpf_numbers(char *cpf_numbers, char *cpf_string);
+static char *get_formated_cpf(BANK *client);
+static void put_dot_and_dash(char *cpf_string, char *temp_cpf_string);
 
 BANK *create_bank_client(CPF cpf, NAME name, AGE age, BALANCE balance) {
     if (cpf > 0) { // Verificação símbolica
@@ -57,15 +59,20 @@ BALANCE get_balance(BANK *client) {
 }
 
 void print_client(BANK *client) {
-    CPF cpf = get_key(client);
-    char *formated_cpf = format_cpf_numbers(cpf);
+    char *cpf = get_formated_cpf(client);
 
     printf("Conta :: %s\n", get_name(client));
-    printf("CPF :: %s\n", formated_cpf);
+    printf("CPF :: %s\n", cpf);
     printf("Idade :: %u\n", get_age(client));
     printf("Saldo atual :: R$ %.2f\n", get_balance(client));
 
-    free(formated_cpf);
+    free(cpf);
+}
+
+static char *get_formated_cpf(BANK *client) {
+    CPF cpf = get_key(client);
+    char *formated_cpf = format_cpf_numbers(cpf);
+    return formated_cpf;
 }
 
 void print_item(BANK *client) {
@@ -97,7 +104,12 @@ char *format_cpf_numbers(CPF cpf) {
     sprintf(temp_cpf_string, "%llu", cpf);
 
     char *cpf_string = (char *)malloc(sizeof(char) * 15);
-    for (int index = 0,i = 0; index < 11; i++, index++) {
+    put_dot_and_dash(cpf_string, temp_cpf_string);
+    return cpf_string;
+}
+
+static void put_dot_and_dash(char *cpf_string, char *temp_cpf_string) {
+    for (int index = 0, i = 0; index < 11; i++, index++) {
         if (i == 3 || i == 7) {
             cpf_string[i] = '.';
             index--;
@@ -109,7 +121,6 @@ char *format_cpf_numbers(CPF cpf) {
         }
     }
     cpf_string[14] = '\0';
-    return cpf_string;
 }
 
 operation select_command(char *command) {

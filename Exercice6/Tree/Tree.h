@@ -3,7 +3,7 @@
 #include "../Bank/Bank.h" //Importei para que as funções print_item e get_key fizessem sentido, não sei como resolver isso
 #include "../Util/util.h"
 
-typedef CPF TYPE_KEY; //necessário definir, caso a key seja diferente de int
+typedef CPF TYPE_KEY; //necessário definir
 
 typedef struct binary_tree_st BINARY_TREE;
 
