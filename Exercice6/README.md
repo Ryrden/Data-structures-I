@@ -64,7 +64,7 @@ métodos que serão comuns no decorrer da disciplina.
 
 Devido a esse objetivo, será exigido que vocês desenvolvam seu projeto representando ambas as entidades citadas na descrição como **TAD completos e fechados sobre si mesmos**, isto é, com funções auxiliares que permitam o acesso e a manipulação de seus atributos em diferentes contextos(arquivos .c separados). Os dados devem ser armazenados como um **TAD cliente** e dentro de uma **Árvore Binária** implementada com nós de ponteiros duplos.
 
-Para remoção, substitua o nó excluído, pelo maior entre seus menores filhos, isto é, o nó de maior valor da sua sub-árvore esquerda.
+Para remoção, substitua o nó excluído, pelo menor entre seus maiores filhos, isto é, o nó de menor valor da sua sub-árvore direita.
 
 A memória deve ser alocada **dinamicamente** e ser devidamente liberada
 ao fim da execução. 
