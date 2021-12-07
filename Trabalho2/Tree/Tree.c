@@ -9,7 +9,7 @@ struct node_st {
     NODE *left;
 };
 
-struct binary_tree_st {
+struct avl_tree_st {
     NODE *root;
     int depth;
 };
@@ -24,14 +24,14 @@ static boolean isBigger(void *item, NODE *root);
 static boolean isSmaller(void *item, NODE *root);
 static boolean least_one_child(NODE **root);
 static boolean has_both_childs(NODE **root);
-static BANK *search_node(NODE *root, TYPE_KEY key);
+static GAME *search_node(NODE *root, TYPE_KEY key);
 
 static void swap_min_right(NODE *swap, NODE *root, NODE *previous_node);
 static boolean remove_node(NODE **root, TYPE_KEY key);
 
-BINARY_TREE *create_tree() {
-    BINARY_TREE *tree;
-    tree = (BINARY_TREE *)malloc(sizeof(BINARY_TREE));
+AVL_TREE *create_tree() {
+    AVL_TREE *tree;
+    tree = (AVL_TREE *)malloc(sizeof(AVL_TREE));
     if (tree != NULL) {
         tree->root = NULL;
         tree->depth = -1;
@@ -54,7 +54,7 @@ static NODE *create_tree_node(void *item) {
     return NULL;
 }
 
-boolean erase_tree(BINARY_TREE **tree) {
+boolean erase_tree(AVL_TREE **tree) {
     if (tree != NULL) {
         erase_tree_nodes(&(*tree)->root);
         free(*tree);
@@ -64,7 +64,7 @@ boolean erase_tree(BINARY_TREE **tree) {
     return FALSE;
 }
 
-boolean insert_tree(BINARY_TREE *tree, void *item) {
+boolean insert_tree(AVL_TREE *tree, void *item) {
     return ((tree->root = insert_tree_node(tree->root, item)) != NULL);
 }
 
@@ -96,7 +96,7 @@ static void erase_tree_nodes(NODE **root) {
     }
 }
 
-void pre_order_tree(BINARY_TREE *tree) {
+void pre_order_tree(AVL_TREE *tree) {
     recursion_pre_order(tree->root);
 }
 
@@ -108,7 +108,7 @@ static void recursion_pre_order(NODE *root) {
     }
 }
 
-void in_order_tree(BINARY_TREE *tree) {
+void in_order_tree(AVL_TREE *tree) {
     recursion_in_order(tree->root);
 }
 
@@ -120,7 +120,7 @@ static void recursion_in_order(NODE *root) {
     }
 }
 
-void pos_order_tree(BINARY_TREE *tree) {
+void pos_order_tree(AVL_TREE *tree) {
     recursion_pos_order(tree->root);
 }
 
@@ -132,11 +132,11 @@ static void recursion_pos_order(NODE *root) {
     }
 }
 
-BANK *search_tree(BINARY_TREE *tree, TYPE_KEY key) {
+GAME *search_tree(AVL_TREE *tree, TYPE_KEY key) {
     return (search_node(tree->root, key));
 }
 
-static BANK *search_node(NODE *root, TYPE_KEY key) {
+static GAME *search_node(NODE *root, TYPE_KEY key) {
     if (root == NULL)
         return NULL;
     if (key == get_key(root->item))
@@ -147,7 +147,7 @@ static BANK *search_node(NODE *root, TYPE_KEY key) {
         return search_node(root->right, key);
 }
 
-boolean remove_tree(BINARY_TREE *tree, TYPE_KEY key) {
+boolean remove_tree(AVL_TREE *tree, TYPE_KEY key) {
     if (tree != NULL)
         return remove_node(&tree->root, key);
     return FALSE;
