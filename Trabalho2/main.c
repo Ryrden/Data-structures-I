@@ -58,10 +58,15 @@ int main() {
         // Registrar na lista catalogo
         insert_tree(tree, game);
     }
+
     int year;
 
     while (scanf("%d", &year)) {
-        remove_tree(tree, year);
+        if (remove_tree(tree, year))
+            printf("\nDeu bom\n");
+        else
+            printf("\nDeu ruim\n");
+
     }
 
     if (command == PRE_ORDEM)

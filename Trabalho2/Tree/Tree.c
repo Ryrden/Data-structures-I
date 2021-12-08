@@ -49,7 +49,7 @@ static boolean has_both_childs(NODE **root);
 static GAME *search_node(NODE *root, TYPE_KEY key);
 
 static void swap_max_left(NODE *swap, NODE *root, NODE *previous_node);
-static boolean remove_node(NODE **root, TYPE_KEY key);
+static NODE *remove_node(NODE **root, TYPE_KEY key);
 
 AVL_TREE *create_tree() {
     AVL_TREE *tree;
@@ -236,7 +236,7 @@ static GAME *search_node(NODE *root, TYPE_KEY key) {
 
 boolean remove_tree(AVL_TREE *tree, TYPE_KEY key) {
     if (tree != NULL)
-        return remove_node(&tree->root, key);
+        return ((tree->root = remove_node(&tree->root, key)) != NULL);
     return FALSE;
 }
 
@@ -248,17 +248,18 @@ static boolean has_both_childs(NODE **root) {
     return (*root)->left != NULL && (*root)->right != NULL;
 }
 
-static boolean remove_node(NODE **root, TYPE_KEY key) {
+static NODE *remove_node(NODE **root, TYPE_KEY key) {
     NODE *removed_node;
     if (*root == NULL)
-        return FALSE;
+        return NULL;
 
     if (key < get_key((*root)->item))
-        return remove_node(&(*root)->left, key);
-    else if (key > get_key((*root)->item))
-        return remove_node(&(*root)->right, key);
+        (*root)->left = remove_node(&(*root)->left, key);
 
-    if (key == get_key((*root)->item)) {
+    else if (key > get_key((*root)->item))
+        (*root)->right = remove_node(&(*root)->right, key);
+
+    else if (key == get_key((*root)->item)) {
         if (least_one_child(&(*root))) {
             removed_node = *root;
             if ((*root)->left == NULL)
@@ -271,19 +272,22 @@ static boolean remove_node(NODE **root, TYPE_KEY key) {
         } else if (has_both_childs(&(*root)))
             swap_max_left((*root)->left, (*root), (*root));
     }
-    (*root)->height = update_height((*root)->left, (*root)->right);
-    if (negative_unbalance(*root)) {
-        if (get_node_height((*root)->left) - get_node_height((*root)->right) <= 0)
-            *root = left_rotate(*root);
-        else
-            *root = right_left_rotate(*root);
-    } else if (positive_unbalance(*root)) {
-        if (get_node_height((*root)->left) - get_node_height((*root)->right) >= 0)
-            *root = right_rotate(*root);
-        else
-            *root = left_right_rotate(*root);
+    if (*root != NULL) {
+        (*root)->height = update_height((*root)->left, (*root)->right);
+        if (negative_unbalance(*root)) {
+            if (get_node_height((*root)->left->right) - get_node_height((*root)->left->left) <= 0)
+                *root = right_rotate(*root);
+            else
+                *root = left_right_rotate(*root);
+        } else if (positive_unbalance(*root)) {
+            if (get_node_height((*root)->right->right) - get_node_height((*root)->right->left) >= 0)
+                *root = left_rotate(*root);
+            else
+                *root = right_left_rotate(*root);
+            
+        }
     }
-    return TRUE;
+    return *root;
 }
 
 static void swap_max_left(NODE *swap, NODE *root, NODE *previous_node) {
