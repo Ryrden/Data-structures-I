@@ -52,6 +52,12 @@ int get_key(const GAME *game) {
     return ERROR;
 }
 
+char *get_game_name(GAME *game){
+    if (game != NULL)
+        return game->name;
+    return NULL;
+}
+
 GAME *create_empty_item() {
     GAME *item;
 

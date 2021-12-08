@@ -18,11 +18,13 @@ typedef enum {
     POS_ORDEM
 } tree_command;
 
+//2019,2004,2012,2014,2016,2007,2015,2020,2010,2000,2013,2017,2021,2008
+
 int main() {
     AVL_TREE *tree;
     FILE *arq1;
 
-    arq1 = fopen("CSV-TodosJogos.csv", "r");
+    arq1 = fopen("CSV-SemRep.csv", "r");
     if (arq1 == NULL) {
         perror("Error to open Archive");
         exit(EXIT_FAILURE);
