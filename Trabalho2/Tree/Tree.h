@@ -8,9 +8,9 @@ typedef int TYPE_KEY; // necessário definir
 typedef struct avl_tree_st AVL_TREE;
 
 AVL_TREE *create_tree();
-boolean insert_tree(AVL_TREE *tree, GAME *item);
+boolean insert_tree(AVL_TREE *tree, void *item);
 boolean erase_tree(AVL_TREE **tree);
-boolean remove_tree(AVL_TREE *tree, TYPE_KEY key);
+boolean remove_tree_item(AVL_TREE *tree, TYPE_KEY key);
 GAME *search_tree(AVL_TREE *tree, TYPE_KEY key);
 void pre_order_tree(AVL_TREE *tree);
 void in_order_tree(AVL_TREE *tree);

@@ -7,6 +7,8 @@ typedef struct game_st GAME;
 
 void register_game(GAME *game, char *name, char *producer, int year, int key);
 
+void print_game(GAME *game);
+
 int get_key(const GAME *game);
 
 char *get_game_name(GAME *game);

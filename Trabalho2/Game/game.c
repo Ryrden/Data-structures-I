@@ -42,6 +42,12 @@ char *search_year(GAME *game, int game_year) {
     return FALSE;
 }
 
+void print_game(GAME *game) {
+    printf("%s ", game->name);
+    printf("%d ", game->year);
+    printf("%s\n", game->producer);
+}
+
 void print_item(GAME *game) {
     printf("%s\n", game->name);
 }
@@ -52,7 +58,7 @@ int get_key(const GAME *game) {
     return ERROR;
 }
 
-char *get_game_name(GAME *game){
+char *get_game_name(GAME *game) {
     if (game != NULL)
         return game->name;
     return NULL;

@@ -1,4 +1,4 @@
-UTIL=Game/game.c Tree/tree.c Util/util.c
+UTIL=Game/game.c Tree/Tree.c Util/util.c
 MAIN=main.c
 BINARY=main
 
