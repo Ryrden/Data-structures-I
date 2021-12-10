@@ -1,6 +1,6 @@
 #ifndef TREE_H
 #define TREE_H
-#include "../Game/game.h" //Importei para que as funções print_item e get_key fizessem sentido, não sei como resolver isso
+#include "../Game/game.h" //Importei para que as funções print_item,get_key,get_game_name fizessem sentido, não sei como resolver isso
 #include "../Util/util.h"
 
 typedef int TYPE_KEY; // necessário definir

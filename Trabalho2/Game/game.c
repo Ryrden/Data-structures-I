@@ -15,7 +15,7 @@ void register_game(GAME *game, char *name, char *producer, int year, int key) {
         strcpy(game->name, name);
         strcpy(game->producer, producer);
         game->year = year;
-        game->key = key;
+        set_key(game,key);
     }
 }
 
@@ -26,30 +26,16 @@ GAME *create_game() {
     return game;
 }
 
-char *search_producer(GAME *game, char *game_producer) {
-    if (!strcmp(game->producer, game_producer)) {
-        return game->name;
-    }
-
-    return FALSE;
-}
-
-char *search_year(GAME *game, int game_year) {
-    if (game->year == game_year) {
-        return game->name;
-    }
-
-    return FALSE;
-}
-
-void print_game(GAME *game) {
-    printf("%s ", game->name);
-    printf("%d ", game->year);
-    printf("%s\n", game->producer);
-}
-
 void print_item(GAME *game) {
     printf("%s\n", game->name);
+}
+
+int set_key(GAME *item, int key) {
+    if (item != NULL) {
+        item->key = key;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 int get_key(const GAME *game) {
@@ -64,6 +50,29 @@ char *get_game_name(GAME *game) {
     return NULL;
 }
 
+/* FUNÇÕES Não utilizadas no trabalho 2, mas que foram utilizadas em trabalhos anteriores
+    não apaguei pq o intuito de um tad é isso mesmo, reutilizar código, mesmo q n use, é legal
+    demonstrar q to seguindo a "filosofia dos TAD".
+ */
+
+void print_game(GAME *game) {
+    printf("%s ", game->name);
+    printf("%d ", game->year);
+    printf("%s\n", game->producer);
+}
+
+char *search_producer(GAME *game, char *game_producer) {
+    if (!strcmp(game->producer, game_producer)) 
+        return game->name;
+    return FALSE;
+}
+
+char *search_year(GAME *game, int game_year) {
+    if (game->year == game_year)
+        return game->name;
+    return FALSE;
+}
+
 GAME *create_empty_item() {
     GAME *item;
 
@@ -72,15 +81,6 @@ GAME *create_empty_item() {
         return item;
     return NULL;
 }
-
-int set_key(GAME *item, int key) {
-    if (item != NULL) {
-        item->key = key;
-        return TRUE;
-    }
-    return FALSE;
-}
-
 boolean compare_games(GAME *game1, GAME *game2) {
     if (game1 != NULL && game2 != NULL)
         if (!strcmp(game1->name, game2->name))

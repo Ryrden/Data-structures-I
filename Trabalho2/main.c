@@ -26,7 +26,7 @@ int main() {
     AVL_TREE *tree;
     FILE *arq1;
 
-    arq1 = fopen("CSV-TodosJogos.csv", "r");
+    arq1 = fopen("CSV.csv", "r");
     if (arq1 == NULL) {
         perror("Error to open Archive");
         exit(EXIT_FAILURE);
