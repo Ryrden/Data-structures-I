@@ -385,10 +385,11 @@ static void swap_max_left(NODE *swap, NODE *root, NODE *previous_node) {
     }
     if (root == previous_node) {
         previous_node->left = swap->left;
-    } else{
+    } else {
         previous_node->right = swap->left;
     }
-
+    free(root->item);
+    root->item = NULL; 
     root->item = swap->item;
     free(swap);
     swap = NULL;
