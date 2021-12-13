@@ -103,6 +103,7 @@ static void erase_tree_nodes(NODE **root) {
     if (*root != NULL) {
         erase_tree_nodes(&(*root)->left);
         erase_tree_nodes(&(*root)->right);
+        erase_item((*root)->item);
         free((*root)->item);
         (*root)->item = NULL;
         free(*root);
@@ -334,6 +335,7 @@ static void remove_node_with_least_one_child(NODE **node) {
         *node = (*node)->right;
     else
         *node = (*node)->left;
+    erase_item(removed_node->item);
     free(removed_node->item);
     removed_node->item = NULL;
     free(removed_node);
@@ -388,6 +390,7 @@ static void swap_max_left(NODE *swap, NODE *root, NODE *previous_node) {
     } else {
         previous_node->right = swap->left;
     }
+    erase_item(root->item);
     free(root->item);
     root->item = NULL; 
     root->item = swap->item;

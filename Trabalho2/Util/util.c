@@ -32,6 +32,8 @@ char *readLine() {
 char *readStringUntilReach(char caractere) {
     char c;
     char *string = (char *)malloc(sizeof(char) * 256);
+    if (string == NULL)
+        exit(EXIT_FAILURE);
     int index = 0;
     while (scanf("%c", &c) != EOF) {
         if (c == caractere) {

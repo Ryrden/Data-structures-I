@@ -1,6 +1,8 @@
 #ifndef TREE_H
 #define TREE_H
-#include "../Game/game.h" //Importei para que as funções print_item,get_key,get_game_name fizessem sentido, não sei como resolver isso
+//Importei a game.h para que as funções print_item,get_key,get_game_name e erase_item fizessem sentido, não sei como resolver isso
+//mas acredito que se eu for reutilizar essa estrutura, terei de criar funções com os mesmos nomes :)
+#include "../Game/game.h" 
 #include "../Util/util.h"
 
 typedef int TYPE_KEY; // necessário definir

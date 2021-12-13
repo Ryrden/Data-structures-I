@@ -19,6 +19,8 @@ GAME *create_empty_item();
 
 GAME *create_game();
 
+void erase_item(GAME *game);
+
 boolean swap_games(GAME *game1, GAME *game2);
 
 boolean compare_games(GAME *game1, GAME *game2);

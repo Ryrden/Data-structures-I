@@ -4,18 +4,32 @@
 #include <string.h>
 
 struct game_st {
-    char name[256];
-    char producer[256];
+    char *name;
+    char *producer;
     int year;
     int key;
 };
 
 void register_game(GAME *game, char *name, char *producer, int year, int key) {
     if (game != NULL) {
+        int str_len;
+
+        str_len = strlen(name) + 1;
+        game->name = (char *)malloc(sizeof(char) * str_len);
+        if (game->name == NULL)
+            exit(EXIT_FAILURE);
         strcpy(game->name, name);
+        game->name[strlen(game->name)] = '\0'; //RunCodes pensa que não tem fim a frase se não tiver isso
+
+        str_len = strlen(producer) + 1;
+        game->producer = (char *)malloc(sizeof(char) * str_len);
+        if (game->producer == NULL)
+            exit(EXIT_FAILURE);
         strcpy(game->producer, producer);
+        game->producer[strlen(game->producer)] = '\0';  //RunCodes pensa que não tem fim a frase se não tiver isso
+
         game->year = year;
-        set_key(game,key);
+        set_key(game, key);
     }
 }
 
@@ -24,6 +38,18 @@ GAME *create_game() {
     if (game == NULL)
         exit(EXIT_FAILURE);
     return game;
+}
+
+void erase_item(GAME *game) {
+    if (game != NULL) {
+        free(game->name);
+        game->name = NULL;
+        free(game->producer);
+        game->producer = NULL;
+        // Apagando simbolicamente
+        game->key = -32000;
+        game->year = 0;
+    }
 }
 
 void print_item(GAME *game) {
@@ -62,7 +88,7 @@ void print_game(GAME *game) {
 }
 
 char *search_producer(GAME *game, char *game_producer) {
-    if (!strcmp(game->producer, game_producer)) 
+    if (!strcmp(game->producer, game_producer))
         return game->name;
     return FALSE;
 }
