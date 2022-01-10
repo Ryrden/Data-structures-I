@@ -19,7 +19,7 @@ struct sparte_matrix_st {
 };
 
 SPARSE_MATRIX *create_matrix(int nr_rows, int nr_columns) {
-    SPARSE_MATRIX *matrix = (SPARSE_MATRIX *)malloc(sizeof(SPARSE_MATRIX));
+    SPARSE_MATRIX *matrix = (SPARSE_MATRIX*) malloc(sizeof(SPARSE_MATRIX*));
     if (matrix != NULL) {
         matrix->nr_columns = nr_columns;
         matrix->nr_rows = nr_rows;
@@ -91,12 +91,13 @@ int set(SPARSE_MATRIX *matrix, int row, int column, float value) {
         }
     }
     // inserir como último da lista columns
-    if (column_cell == NULL)
+    if (column_cell == NULL) {
         if (previous_column_cell == NULL) {
             matrix->columns[column] = actual_cell;
         } else {
             previous_column_cell->below = actual_cell;
         }
+    }
     // TODO algoritmo simetrico para as rows
     return 1;
 }
